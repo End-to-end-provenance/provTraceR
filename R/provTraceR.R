@@ -32,6 +32,9 @@
 # provenance; otherwise an error message is displayed. For console sessions,
 # set scripts = "console".
 
+# For prov.trace.run only: The provenance collection tool specified by
+# prov.tool must be "rdtLite" or "rdt". The default is "rdtLite".
+
 # It is assumed that provenance for each script is stored under a single
 # provenance directory set by the prov.dir option.  If not, the provenance
 # directory may be specified with the prov.dir parameter. Timestamped 
@@ -58,8 +61,8 @@
 #' @description
 #' prov.trace traces file lineage from existing provenance. 
 #' @param scripts a script name, a vector of script names, a text file of script 
-#' names, or "console"
-#' @param prov_dir provenance directory
+#' names (file extension = .txt), or "console"
+#' @param prov.dir provenance directory
 #' @param file.details whether to display file details
 #' @return no return value
 #' @export
@@ -67,7 +70,9 @@
 #' @rdname lineage
 
 prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE) {
-	if (tools::file_ext(scripts) == "txt") scripts <- get.scripts.from.file(scripts)
+	if (tools::file_ext(scripts) == "txt") {
+		scripts <- get.scripts.from.file(scripts)
+	}
 	prov <- get.provenance(scripts, prov.dir)
 	check.order.of.execution(prov, scripts)
 	infiles <- get.infiles(prov, scripts)
@@ -82,19 +87,23 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE) {
 #' prov.trace.run runs the specified script(s), collects provenance, and uses
 #' the provenance to trace file lineage.
 #' @param scripts a script name, a vector of script names, or a text file of 
-#' script names
-#' @param prov_dir provenance directory
+#' script names (file extension = .txt)
+#' @param prov.dir provenance directory
 #' @param file.details whether to display file details
+#' @param prov.tool provenance collection tool (rdtLite or rdt)
 #' @param details whether to collect fine-grained provenance
+#' @param ... other parameters passed to the provenance collector
 #' @return no return value
 #' @export
 #' @rdname lineage
 
 prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, 
-	details=FALSE) {
+	prov.tool="rdtLite", details=FALSE, ...) {
 
-	if (tools::file_ext(scripts) == "txt") scripts <- get.scripts.from.file(scripts)
-	run.scripts(scripts, details)
+	if (tools::file_ext(scripts) == "txt") {
+		scripts <- get.scripts.from.file(scripts)
+	}
+	run.scripts(scripts, prov.tool, details, ...)
 	prov <- get.provenance(scripts, prov.dir)
 	infiles <- get.infiles(prov, scripts)
 	outfiles <- get.outfiles(prov, scripts)
@@ -128,10 +137,23 @@ get.scripts.from.file <- function(scripts) {
 
 #' run.scripts run scripts in the order specified and collects provenance.
 #' @param scripts a vector of script names
+#' @param prov.tool provenance collection tool (rdtLite or rdt)
+#' @param details whether to collect fine-grained provenance
+#' @param ... other parameters passed to the provenance collector
 #' @return no return value
 #' @noRd
 
-run.scripts <- function(scripts, details) {
+run.scripts <- function(scripts, prov.tool, details, ...) {
+	# get provenance collection tool
+	if (prov.tool == "rdtLite") {
+		prov.run <- rdtLite::prov.run
+	} else if (prov.tool == "rdt") {
+		prov.run <- rdt::prov.run
+	} else {
+		cat("Provenance collector must be rdtLite or rdt")
+		stop()
+	}
+	# run each script in turn
 	for (i in 1:length(scripts)) {
 		if (scripts[i] == "console") {
 			cat("Use prov.trace for console sessions")
@@ -141,13 +163,13 @@ run.scripts <- function(scripts, details) {
 			cat(scripts[i], "not found")
 			stop()
 		}
-		tryCatch (rdtLite::prov.run(scripts[i], details=details), error = function(x) {print (x)})
+		tryCatch (rdtLite::prov.run(scripts[i], details=details, ...), error = function(x) {print (x)})
 	}
 }
 
 #' get.provenance returns a list containing provenance for each script.
 #' @param scripts a vector of script names
-#' @param prov_dir provenance directory
+#' @param prov.dir provenance directory
 #' @return a list of provenance for each script
 #' @noRd
 
@@ -157,6 +179,7 @@ get.provenance <- function(scripts, prov.dir) {
 	if (is.null(prov.dir)) {
 		prov.dir <- getOption("prov.dir")
 	}
+	# get provenance for each script
 	for (i in 1:snum) {
 		if (scripts[i] == "console") {
 			file_name <- "console"

@@ -7,17 +7,28 @@
 \usage{
 prov.trace(scripts, prov.dir = NULL, file.details = FALSE)
 
-prov.trace.run(scripts, prov.dir = NULL, file.details = FALSE, details = FALSE)
+prov.trace.run(
+  scripts,
+  prov.dir = NULL,
+  file.details = FALSE,
+  prov.tool = "rdtLite",
+  details = FALSE,
+  ...
+)
 }
 \arguments{
 \item{scripts}{a script name, a vector of script names, or a text file of 
-script names}
+script names (file extension = .txt)}
+
+\item{prov.dir}{provenance directory}
 
 \item{file.details}{whether to display file details}
 
+\item{prov.tool}{provenance collection tool (rdtLite or rdt)}
+
 \item{details}{whether to collect fine-grained provenance}
 
-\item{prov_dir}{provenance directory}
+\item{...}{other parameters passed to the provenance collector}
 }
 \value{
 no return value
