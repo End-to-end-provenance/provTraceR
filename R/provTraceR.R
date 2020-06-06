@@ -32,8 +32,8 @@
 # provenance; otherwise an error message is displayed. For console sessions,
 # set scripts = "console".
 
-# For prov.trace.run only: The provenance collection tool specified by
-# prov.tool must be "rdtLite" or "rdt". The default is "rdtLite".
+# For prov.trace.run only: The provenance collection tool is specified by the
+# parameter prov.tool and must be "rdtLite" or "rdt". The default is "rdtLite".
 
 # It is assumed that provenance for each script is stored under a single
 # provenance directory set by the prov.dir option.  If not, the provenance
@@ -54,6 +54,9 @@
 # If file.details = TRUE, additional details are displayed, including script
 # execution timestamps, saved file names, and file hash values.
 
+# If save = TRUE, results displayed in the console and saved to the file
+# prov-trace.txt on the current working directory.
+
 ###############################################################################
 
 #' @title
@@ -64,23 +67,20 @@
 #' names (file extension = .txt), or "console"
 #' @param prov.dir provenance directory
 #' @param file.details whether to display file details
+#' @param save whether to save results to the file prov-trace.txt in the current 
+#' working directory
 #' @return no return value
 #' @export
 #' @examples
 #' @rdname lineage
 
-prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE) {
+prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE) {
 	if (tools::file_ext(scripts) == "txt") {
 		scripts <- get.scripts.from.file(scripts)
 	}
 	prov <- get.provenance(scripts, prov.dir)
 	check.order.of.execution(prov, scripts)
-	infiles <- get.infiles(prov, scripts)
-	outfiles <- get.outfiles(prov, scripts)
-	display.scripts(prov, scripts, file.details)
-	display.input.files(infiles, outfiles, file.details)
-	display.output.files(outfiles, file.details)
-	display.exchanged.files(scripts, infiles, outfiles, file.details)
+	trace.files(prov, scripts, file.details, save)
 }
 
 #' @description
@@ -90,6 +90,8 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE) {
 #' script names (file extension = .txt)
 #' @param prov.dir provenance directory
 #' @param file.details whether to display file details
+#' @param save whether to save results to the file prov-trace.txt in the current 
+#' working directory
 #' @param prov.tool provenance collection tool (rdtLite or rdt)
 #' @param details whether to collect fine-grained provenance
 #' @param ... other parameters passed to the provenance collector
@@ -97,7 +99,7 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE) {
 #' @export
 #' @rdname lineage
 
-prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, 
+prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
 	prov.tool="rdtLite", details=FALSE, ...) {
 
 	if (tools::file_ext(scripts) == "txt") {
@@ -105,12 +107,7 @@ prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE,
 	}
 	run.scripts(scripts, prov.tool, details, ...)
 	prov <- get.provenance(scripts, prov.dir)
-	infiles <- get.infiles(prov, scripts)
-	outfiles <- get.outfiles(prov, scripts)
-	display.scripts(prov, scripts, file.details)
-	display.input.files(infiles, outfiles, file.details)
-	display.output.files(outfiles, file.details)
-	display.exchanged.files(scripts, infiles, outfiles, file.details)
+	trace.files(prov, scripts, file.details, save)
 }
 
 #' get.scripts.from.file reads one or more script names from a text file
@@ -182,16 +179,16 @@ get.provenance <- function(scripts, prov.dir) {
 	# get provenance for each script
 	for (i in 1:snum) {
 		if (scripts[i] == "console") {
-			file_name <- "console"
+			file.name <- "console"
 		} else {
-			file_name <- substr(scripts[i], 1, nchar(scripts[i])-2)
+			file.name <- substr(scripts[i], 1, nchar(scripts[i])-2)
  		}
- 		prov_file <- paste(prov.dir, "/prov_", file_name, "/prov.json", sep="")
- 		if (!file.exists(prov_file)) {
- 			cat(prov_file, "not found")
+ 		prov.file <- paste(prov.dir, "/prov_", file.name, "/prov.json", sep="")
+ 		if (!file.exists(prov.file)) {
+ 			cat(prov.file, "not found")
  			stop()
  		}
-		prov[[i]] <- provParseR::prov.parse(prov_file)
+		prov[[i]] <- provParseR::prov.parse(prov.file)
 	}
 	return(prov)
 }
@@ -221,6 +218,63 @@ check.order.of.execution <- function(prov, scripts) {
 	}
 }
 
+#' trace.files collects information on input and output files and 
+#' generates output.
+#' @param prov a list of provenance for each script
+#' @param scripts a vector of script names
+#' @param file.details whether to display file details
+#' @param save whether to save results to the file prov-trace.txt in the current 
+#' working directory
+#' @return no return value
+#' @noRd
+
+trace.files <- function(prov, scripts, file.details, save) {
+	infiles <- get.infiles(prov, scripts)
+	outfiles <- get.outfiles(prov, scripts)
+ 	# output to console and file
+ 	if (save) {
+		save.to.text.file(prov, scripts, infiles, outfiles, file.details)
+	}
+	# output to console only
+	else {
+		display.output(prov, scripts, infiles, outfiles, file.details)
+	}
+}
+
+#' save.to.text.file sends output to the console and to the file prov-trace.txt
+#' on the current working directory.
+#' @param prov a list of provenance for each script
+#' @param scripts a vector of script names
+#' @param infiles a data frame of input files
+#' @param outfiles a data frame of output files
+#' @param file.details whether to display file details
+#' @return no return value
+#' @noRd
+
+save.to.text.file <- function(prov, scripts, infiles, outfiles, file.details) {
+	trace.file <- paste(getwd(), "/prov-trace.txt", sep="")
+	sink(trace.file, split=TRUE)
+	display.output(prov, scripts, infiles, outfiles, file.details)
+	sink()
+	cat(paste("\nSaving results in", trace.file))
+}
+
+#' display.output generates output and sends it to the console.
+#' @param prov a list of provenance for each script
+#' @param scripts a vector of script names
+#' @param infiles a data frame of input files
+#' @param outfiles a data frame of output files
+#' @param file.details whether to display file details
+#' @return no return value
+#' @noRd
+
+display.output <- function(prov, scripts, infiles, outfiles, file.details) {
+	display.scripts(prov, scripts, file.details)
+	display.input.files(infiles, outfiles, file.details)
+	display.output.files(outfiles, file.details)
+	display.exchanged.files(scripts, infiles, outfiles, file.details)
+}
+
 #' check.file.system checks if the specified file exists in its original
 #' location and if the hash value has changed,
 #' @param file original path and file name
@@ -247,18 +301,18 @@ check.file.system <- function(file) {
 
 get.infiles <- function(prov, scripts) {
 	snum <- length(scripts)
-	infiles_list <- list()
+	infiles.list <- list()
 	for (i in 1:snum) {
- 		infiles_list[[i]]  <- provParseR::get.input.files(prov[[i]])
+ 		infiles.list[[i]]  <- provParseR::get.input.files(prov[[i]])
  		# add script number
- 		if (nrow(infiles_list[[i]]) > 0) {
- 			infiles_list[[i]]$script <- i
+ 		if (nrow(infiles.list[[i]]) > 0) {
+ 			infiles.list[[i]]$script <- i
  		}
 	}
-	infiles <- infiles_list[[1]]
+	infiles <- infiles.list[[1]]
 	if (snum > 1) {
 		for (i in 2:snum) {
-			infiles <- rbind(infiles, infiles_list[[i]])
+			infiles <- rbind(infiles, infiles.list[[i]])
 		}
 	}
 	return(infiles)
@@ -272,18 +326,18 @@ get.infiles <- function(prov, scripts) {
 
 get.outfiles <- function(prov, scripts) {
 	snum <- length(scripts)
-	outfiles_list <- list()
+	outfiles.list <- list()
 	for (i in 1:snum) {
- 		outfiles_list[[i]]  <- provParseR::get.output.files(prov[[i]])
+ 		outfiles.list[[i]]  <- provParseR::get.output.files(prov[[i]])
  		# add script number
- 		if (nrow(outfiles_list[[i]]) > 0) {
-			outfiles_list[[i]]$script <- i
+ 		if (nrow(outfiles.list[[i]]) > 0) {
+			outfiles.list[[i]]$script <- i
  		}
 	}
-	outfiles <- outfiles_list[[1]]
+	outfiles <- outfiles.list[[1]]
 	if (snum > 1) {
 		for (i in 2:snum) {
-			outfiles <- rbind(outfiles, outfiles_list[[i]])
+			outfiles <- rbind(outfiles, outfiles.list[[i]])
 		}
 	}
 	return(outfiles)
@@ -297,18 +351,18 @@ get.outfiles <- function(prov, scripts) {
 #' @noRd
 
 display.scripts <- function(prov, scripts, file.details) {
-	cat("\nSCRIPTS:\n\n")
+	cat("SCRIPTS:\n\n")
 	snum <- length(scripts)
 	for (i in 1:snum) {
 		ee <- ee <- provParseR::get.environment(prov[[i]])
-		script_name <- ee[ee$label=="script", "value"]
-		prov_timestamp <- ee[ee$label=="provTimestamp", "value"]
-		if (script_name == "") {
-			script_name <- "Console session"
+		script.name <- ee[ee$label=="script", "value"]
+		prov.timestamp <- ee[ee$label=="provTimestamp", "value"]
+		if (script.name == "") {
+			script.name <- "Console session"
 		}
-		cat(i, ":", script_name, "\n")
+		cat(i, ":", script.name, "\n")
 		if (file.details == TRUE) {
-			cat("        Executed:", prov_timestamp, "\n\n")
+			cat("        Executed:", prov.timestamp, "\n\n")
 		}
 	}
 	cat("\n")

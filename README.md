@@ -21,13 +21,13 @@ This package includes two functions:
 1. To use existing provenance to trace file lineage:
 
 ```{r}
-prov.trace(scripts, prov.dir=NULL, file.details=FALSE)
+prov.trace(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE)
 ```
 
 2. To run one or more scripts, collect provenance, and trace file lineage:
 
 ```{r}
-prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, prov.tool="rdtLite", details=FALSE, ...)
+prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, prov.tool="rdtLite", details=FALSE, ...)
 ```
 
 The <i>scripts</i> parameter may contain a single script name, a vector
@@ -60,6 +60,9 @@ hash value is unchanged.
 
 If <i>file.details</i> = TRUE, additional details are displayed, including script
 execution timestamps, saved file names, and file hash values.
+
+If <i>save</i> = TRUE, results are displayed in the console and saved to the
+file prov-trace.txt on the current working directory.
 
 ## Examples
 

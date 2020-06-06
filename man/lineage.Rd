@@ -5,12 +5,13 @@
 \alias{prov.trace.run}
 \title{File lineage functions}
 \usage{
-prov.trace(scripts, prov.dir = NULL, file.details = FALSE)
+prov.trace(scripts, prov.dir = NULL, file.details = FALSE, save = FALSE)
 
 prov.trace.run(
   scripts,
   prov.dir = NULL,
   file.details = FALSE,
+  save = FALSE,
   prov.tool = "rdtLite",
   details = FALSE,
   ...
@@ -23,6 +24,9 @@ script names (file extension = .txt)}
 \item{prov.dir}{provenance directory}
 
 \item{file.details}{whether to display file details}
+
+\item{save}{whether to save results to the file prov-trace.txt in the current 
+working directory}
 
 \item{prov.tool}{provenance collection tool (rdtLite or rdt)}
 
