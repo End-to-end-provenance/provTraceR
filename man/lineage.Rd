@@ -5,19 +5,34 @@
 \alias{prov.trace.run}
 \title{File lineage functions}
 \usage{
-prov.trace(scripts, prov.dir = NULL, file.details = FALSE)
+prov.trace(scripts, prov.dir = NULL, file.details = FALSE, save = FALSE)
 
-prov.trace.run(scripts, prov.dir = NULL, file.details = FALSE, details = FALSE)
+prov.trace.run(
+  scripts,
+  prov.dir = NULL,
+  file.details = FALSE,
+  save = FALSE,
+  prov.tool = "rdtLite",
+  details = FALSE,
+  ...
+)
 }
 \arguments{
 \item{scripts}{a script name, a vector of script names, or a text file of 
-script names}
+script names (file extension = .txt)}
+
+\item{prov.dir}{provenance directory}
 
 \item{file.details}{whether to display file details}
 
+\item{save}{whether to save results to the file prov-trace.txt in the current 
+working directory}
+
+\item{prov.tool}{provenance collection tool (rdtLite or rdt)}
+
 \item{details}{whether to collect fine-grained provenance}
 
-\item{prov_dir}{provenance directory}
+\item{...}{other parameters passed to the provenance collector}
 }
 \value{
 no return value

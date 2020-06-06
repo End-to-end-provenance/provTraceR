@@ -21,13 +21,13 @@ This package includes two functions:
 1. To use existing provenance to trace file lineage:
 
 ```{r}
-prov.trace(scripts, prov.dir=NULL, file.details=FALSE)
+prov.trace(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE)
 ```
 
 2. To run one or more scripts, collect provenance, and trace file lineage:
 
 ```{r}
-prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, details=FALSE)
+prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, prov.tool="rdtLite", details=FALSE, ...)
 ```
 
 The <i>scripts</i> parameter may contain a single script name, a vector
@@ -37,6 +37,10 @@ For <i>prov.trace</i> only: If more than one script is specified, the order
 of the scripts must match the order of execution as recorded in the 
 provenance; otherwise an error message is displayed. For console sessions,
 set <i>scripts</i> = "console".
+
+For <i>prov.trace.run</i> only: The provenance collection tool specified by
+prov.tool must be "rdtLite" or "rdt". If details = TRUE, fine-grained provenance
+is collected. Other optional parameters (...) are passed to rdtLite or rdt.
 
 It is assumed that provenance for each script is stored under a single
 provenance directory set by the <i>prov.dir</i> option.  If not, the provenance
@@ -57,8 +61,8 @@ hash value is unchanged.
 If <i>file.details</i> = TRUE, additional details are displayed, including script
 execution timestamps, saved file names, and file hash values.
 
-If <i>details</i> = TRUE, fine-grained provenance is collected by <i>rdtLite</i>;
-otherwise only coarse-grained provenance is collected.
+If <i>save</i> = TRUE, results are displayed in the console and saved to the
+file prov-trace.txt on the current working directory.
 
 ## Examples
 
