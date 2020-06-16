@@ -1,7 +1,7 @@
 Package: provTraceR
-Title: Uses provenance to trace file lineage for one or more R scripts
+Title: Uses Provenance to Trace File Lineage for One or more R scripts
 Version: 1.0
-Date: 2020-06-06
+Date: 2020-06-16
 Authors@R: c( person("Barbara", "Lerner", role = "cre",
                       email = "blerner@mtholyoke.edu"),
               person("Emery", "Boose", role = "aut",
@@ -17,6 +17,10 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     provParseR (>= 0.2)
+Suggests:
+    rdtLite,
+    rdt,
+    testthat
 URL: https://github.com/End-to-end-provenance
 BugReports: https://github.com/End-to-end-provenance/provTraceR/issues
 RoxygenNote: 7.1.0

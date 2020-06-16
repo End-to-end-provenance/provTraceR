@@ -71,7 +71,6 @@
 #' working directory
 #' @return no return value
 #' @export
-#' @examples
 #' @rdname lineage
 
 prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE) {
