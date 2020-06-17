@@ -54,8 +54,13 @@
 # If file.details = TRUE, additional details are displayed, including script
 # execution timestamps, saved file names, and file hash values.
 
-# If save = TRUE, results displayed in the console and saved to the file
-# prov-trace.txt on the current working directory.
+# If save = TRUE, results are displayed in the console and saved to the file
+# prov-trace.txt.
+
+# The parameter save.dir determines where the results file will be saved.
+# If save.dir is NULL (the default), the R session temporary directory is used.
+# If save.dir = ".", the current working directory is used. Otherwise the 
+# directory specified by save.dir is used.
 
 ###############################################################################
 
@@ -67,19 +72,23 @@
 #' names (file extension = .txt), or "console"
 #' @param prov.dir provenance directory
 #' @param file.details whether to display file details
-#' @param save whether to save results to the file prov-trace.txt in the current 
-#' working directory
+#' @param save whether to save results to the file prov-trace.txt
+#' @param save.dir where to save the results file. If NULL, use the R session 
+#' temporary directory. If a period (.), use the current working directory.
+#' Otherwise use save.dir.
 #' @return no return value
 #' @export
 #' @rdname lineage
 
-prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE) {
+prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
+	save.dir=NULL) {
+
 	if (tools::file_ext(scripts) == "txt") {
 		scripts <- get.scripts.from.file(scripts)
 	}
 	prov <- get.provenance(scripts, prov.dir)
 	check.order.of.execution(prov, scripts)
-	trace.files(prov, scripts, file.details, save)
+	trace.files(prov, scripts, file.details, save, save.dir)
 }
 
 #' @description
@@ -89,8 +98,10 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE) {
 #' script names (file extension = .txt)
 #' @param prov.dir provenance directory
 #' @param file.details whether to display file details
-#' @param save whether to save results to the file prov-trace.txt in the current 
-#' working directory
+#' @param save whether to save results to the file prov-trace.txt
+#' @param save.dir where to save the results file. If NULL, use the R session 
+#' temporary directory. If a period (.), use the current working directory.
+#' Otherwise use save.dir.
 #' @param prov.tool provenance collection tool (rdtLite or rdt)
 #' @param details whether to collect fine-grained provenance
 #' @param ... other parameters passed to the provenance collector
@@ -99,14 +110,14 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE) {
 #' @rdname lineage
 
 prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
-	prov.tool="rdtLite", details=FALSE, ...) {
+	save.dir=NULL, prov.tool="rdtLite", details=FALSE, ...) {
 
 	if (tools::file_ext(scripts) == "txt") {
 		scripts <- get.scripts.from.file(scripts)
 	}
 	run.scripts(scripts, prov.tool, details, ...)
 	prov <- get.provenance(scripts, prov.dir)
-	trace.files(prov, scripts, file.details, save)
+	trace.files(prov, scripts, file.details, save, save.dir)
 }
 
 #' get.scripts.from.file reads one or more script names from a text file
@@ -222,17 +233,17 @@ check.order.of.execution <- function(prov, scripts) {
 #' @param prov a list of provenance for each script
 #' @param scripts a vector of script names
 #' @param file.details whether to display file details
-#' @param save whether to save results to the file prov-trace.txt in the current 
-#' working directory
+#' @param save whether to save results to the file prov-trace.txt
+#' @param save.dir where to save the results file
 #' @return no return value
 #' @noRd
 
-trace.files <- function(prov, scripts, file.details, save) {
+trace.files <- function(prov, scripts, file.details, save, save.dir) {
 	infiles <- get.infiles(prov, scripts)
 	outfiles <- get.outfiles(prov, scripts)
  	# output to console and file
  	if (save) {
-		save.to.text.file(prov, scripts, infiles, outfiles, file.details)
+		save.to.text.file(prov, scripts, infiles, outfiles, file.details, save.dir)
 	}
 	# output to console only
 	else {
@@ -247,15 +258,35 @@ trace.files <- function(prov, scripts, file.details, save) {
 #' @param infiles a data frame of input files
 #' @param outfiles a data frame of output files
 #' @param file.details whether to display file details
+#' @param save.dir where to save the results file
 #' @return no return value
 #' @noRd
 
-save.to.text.file <- function(prov, scripts, infiles, outfiles, file.details) {
-	trace.file <- paste(getwd(), "/prov-trace.txt", sep="")
+save.to.text.file <- function(prov, scripts, infiles, outfiles, file.details, save.dir) {
+	sdir <- get.save.dir(save.dir)	
+	trace.file <- paste(sdir, "/prov-trace.txt", sep="")
 	sink(trace.file, split=TRUE)
 	display.output(prov, scripts, infiles, outfiles, file.details)
 	sink()
 	cat(paste("\nSaving results in", trace.file))
+}
+
+#' get.save.dir returns the directory where the results file (prov-trace.txt) 
+#' will be saved. If NULL, the R session temporary directory is used. If a 
+#' period (.), the current working directory is used. Otherwise save.dir is used.
+#' @param save.dir where to save the results file
+#' @return the result file directory
+#' @noRd
+
+get.save.dir <- function(save.dir) {
+	if (is.null(save.dir)) {
+		sdir <- normalizePath(tempdir(), winslash = "/", mustWork = FALSE)
+	} else if (save.dir == ".") {
+		sdir <- getwd()
+	} else {
+		sdir <- save.dir
+	}
+	return(sdir)
 }
 
 #' display.output generates output and sends it to the console.
