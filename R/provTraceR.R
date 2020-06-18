@@ -183,8 +183,15 @@ run.scripts <- function(scripts, prov.tool, details, ...) {
 get.provenance <- function(scripts, prov.dir) {
 	snum <- length(scripts)
 	prov <- list()
+	# get provenance directory
 	if (is.null(prov.dir)) {
 		prov.dir <- getOption("prov.dir")
+	} else {
+		prov.dir <- normalizePath(prov.dir, winslash="/", mustWork=FALSE)
+	}
+	if (!dir.exists(prov.dir)) {
+		cat(prov.dir, "not found")
+		stop()
 	}
 	# get provenance for each script
 	for (i in 1:snum) {
@@ -263,7 +270,7 @@ trace.files <- function(prov, scripts, file.details, save, save.dir) {
 #' @noRd
 
 save.to.text.file <- function(prov, scripts, infiles, outfiles, file.details, save.dir) {
-	sdir <- get.save.dir(save.dir)	
+	sdir <- get.save.dir(save.dir)
 	trace.file <- paste(sdir, "/prov-trace.txt", sep="")
 	sink(trace.file, split=TRUE)
 	display.output(prov, scripts, infiles, outfiles, file.details)
@@ -284,7 +291,11 @@ get.save.dir <- function(save.dir) {
 	} else if (save.dir == ".") {
 		sdir <- getwd()
 	} else {
-		sdir <- save.dir
+		sdir <- normalizePath(save.dir, winslash="/", mustWork=FALSE)
+		if (!dir.exists(sdir)) {
+			cat(sdir, "not found")
+			stop()
+		}
 	}
 	return(sdir)
 }
