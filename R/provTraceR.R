@@ -313,9 +313,10 @@ display.output <- function(prov, scripts, infiles, outfiles, file.details) {
 
 check.file.system <- function(file) {
 	location <- file$location
+	hash.algorithm <- file$hash.algorithm
 	if (!file.exists(location)) {
 		tag <- "-"
-	} else if (file$hash != tools::md5sum(location)) {
+	} else if (file$hash != digest::digest(file=location, algo=hash.algorithm)) {
 		tag <- "+"
 	} else {
 		tag <- ":"
@@ -334,9 +335,12 @@ get.infiles <- function(prov, scripts) {
 	infiles.list <- list()
 	for (i in 1:snum) {
  		infiles.list[[i]]  <- provParseR::get.input.files(prov[[i]])
- 		# add script number
  		if (nrow(infiles.list[[i]]) > 0) {
+ 			# add script number
  			infiles.list[[i]]$script <- i
+ 			# add hash algorithm
+			ee <- provParseR::get.environment(prov[[i]])
+ 			infiles.list[[i]]$hash.algorithm <- ee[ee$label=="hashAlgorithm", "value"]
  		}
 	}
 	infiles <- infiles.list[[1]]
@@ -359,9 +363,12 @@ get.outfiles <- function(prov, scripts) {
 	outfiles.list <- list()
 	for (i in 1:snum) {
  		outfiles.list[[i]]  <- provParseR::get.output.files(prov[[i]])
- 		# add script number
  		if (nrow(outfiles.list[[i]]) > 0) {
+ 			# add script number
 			outfiles.list[[i]]$script <- i
+ 			# add hash algorithm
+			ee <- provParseR::get.environment(prov[[i]])
+ 			outfiles.list[[i]]$hash.algorithm <- ee[ee$label=="hashAlgorithm", "value"]
  		}
 	}
 	outfiles <- outfiles.list[[1]]
