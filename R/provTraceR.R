@@ -87,7 +87,7 @@
 prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
 	save.dir=NULL) {
 
-	if (tools::file_ext(scripts) == "txt") {
+	if (length(scripts) == 1 && tools::file_ext(scripts) == "txt") {
 		scripts <- get.scripts.from.file(scripts)
 	}
 	prov <- get.provenance(scripts, prov.dir)
@@ -120,7 +120,7 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
 prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
 	save.dir=NULL, prov.tool="rdtLite", details=FALSE, ...) {
 
-	if (tools::file_ext(scripts) == "txt") {
+	if (length(scripts) == 1 && tools::file_ext(scripts) == "txt") {
 		scripts <- get.scripts.from.file(scripts)
 	}
 	run.scripts(scripts, prov.tool, details, ...)
@@ -136,7 +136,7 @@ prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALS
 
 get.scripts.from.file <- function(scripts) {
 	if (!file.exists(scripts)) {
-		cat(scripts, "not found")
+		cat(scripts, "not found\n")
 		stop()
 	}
 	script.names <- readLines(scripts, warn=FALSE)
@@ -165,17 +165,17 @@ run.scripts <- function(scripts, prov.tool, details, ...) {
 	} else if (prov.tool == "rdt") {
 		prov.run <- rdt::prov.run
 	} else {
-		cat("Provenance collector must be rdtLite or rdt")
+		cat("Provenance collector must be rdtLite or rdt\n")
 		stop()
 	}
 	# run each script in turn
 	for (i in 1:length(scripts)) {
 		if (scripts[i] == "console") {
-			cat("Use prov.trace for console sessions")
+			cat("Use prov.trace for console sessions\n")
 			stop()
 		}
 		if (!file.exists(scripts[i])) {
-			cat(scripts[i], "not found")
+			cat(scripts[i], "not found\n")
 			stop()
 		}
 		tryCatch (prov.run(scripts[i], details=details, ...), error = function(x) {print (x)})
@@ -198,7 +198,7 @@ get.provenance <- function(scripts, prov.dir) {
 		prov.dir <- normalizePath(prov.dir, winslash="/", mustWork=FALSE)
 	}
 	if (!dir.exists(prov.dir)) {
-		cat(prov.dir, "not found")
+		cat(prov.dir, "not found\n")
 		stop()
 	}
 	# get provenance for each script
@@ -210,7 +210,7 @@ get.provenance <- function(scripts, prov.dir) {
  		}
  		prov.file <- paste(prov.dir, "/prov_", file.name, "/prov.json", sep="")
  		if (!file.exists(prov.file)) {
- 			cat(prov.file, "not found")
+ 			cat(prov.file, "not found\n")
  			stop()
  		}
 		prov[[i]] <- provParseR::prov.parse(prov.file)
@@ -236,7 +236,7 @@ check.order.of.execution <- function(prov, scripts) {
 		}
 		for (i in 1:(snum-1)) {
 			if (ts[i] > ts[i+1]) {
-				cat("Order of execution does not match\n")
+				cat("Scripts were not run in this order\n")
 				stop()
 			}
 		}
@@ -283,7 +283,7 @@ save.to.text.file <- function(prov, scripts, infiles, outfiles, file.details, sa
 	sink(trace.file, split=TRUE)
 	display.output(prov, scripts, infiles, outfiles, file.details)
 	sink()
-	cat(paste("\nSaving results in", trace.file))
+	cat(paste("\nSaving results in", trace.file, "\n"))
 }
 
 #' get.save.dir returns the directory where the results file (prov-trace.txt) 
@@ -301,7 +301,7 @@ get.save.dir <- function(save.dir) {
 	} else {
 		sdir <- normalizePath(save.dir, winslash="/", mustWork=FALSE)
 		if (!dir.exists(sdir)) {
-			cat(sdir, "not found")
+			cat(sdir, "not found\n")
 			stop()
 		}
 	}
