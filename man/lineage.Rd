@@ -5,13 +5,20 @@
 \alias{prov.trace.run}
 \title{File lineage functions}
 \usage{
-prov.trace(scripts, prov.dir = NULL, file.details = FALSE, save = FALSE)
+prov.trace(
+  scripts,
+  prov.dir = NULL,
+  file.details = FALSE,
+  save = FALSE,
+  save.dir = NULL
+)
 
 prov.trace.run(
   scripts,
   prov.dir = NULL,
   file.details = FALSE,
   save = FALSE,
+  save.dir = NULL,
   prov.tool = "rdtLite",
   details = FALSE,
   ...
@@ -25,8 +32,11 @@ script names (file extension = .txt)}
 
 \item{file.details}{whether to display file details}
 
-\item{save}{whether to save results to the file prov-trace.txt in the current 
-working directory}
+\item{save}{whether to save results to the file prov-trace.txt}
+
+\item{save.dir}{where to save the results file. If NULL, use the R session 
+temporary directory. If a period (.), use the current working directory.
+Otherwise use save.dir.}
 
 \item{prov.tool}{provenance collection tool (rdtLite or rdt)}
 
@@ -44,4 +54,12 @@ prov.trace traces file lineage from existing provenance.
 
 prov.trace.run runs the specified script(s), collects provenance, and uses
 the provenance to trace file lineage.
+}
+\examples{
+\dontrun{
+testdata <- system.file("testscripts", "test.R", package = "provTraceR")
+prov.trace(testdata)}
+\dontrun{
+testdata <- system.file("testscripts", "test.R", package = "provTraceR")
+prov.trace.run(testdata)}
 }

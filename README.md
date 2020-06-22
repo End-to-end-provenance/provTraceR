@@ -21,13 +21,13 @@ This package includes two functions:
 1. To use existing provenance to trace file lineage:
 
 ```{r}
-prov.trace(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE)
+prov.trace(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, save.dir=NULL)
 ```
 
 2. To run one or more scripts, collect provenance, and trace file lineage:
 
 ```{r}
-prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, prov.tool="rdtLite", details=FALSE, ...)
+prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, save.dir=NULL, prov.tool="rdtLite", details=FALSE, ...)
 ```
 
 The <i>scripts</i> parameter may contain a single script name, a vector
@@ -62,7 +62,12 @@ If <i>file.details</i> = TRUE, additional details are displayed, including scrip
 execution timestamps, saved file names, and file hash values.
 
 If <i>save</i> = TRUE, results are displayed in the console and saved to the
-file prov-trace.txt on the current working directory.
+file prov-trace.txt.
+
+The <i>save.dir</i> parameter determines where the results file is saved. 
+If NULL (the default), the R session temporary directory is used. If a period (.),
+the current working directory is used. Otherwise the directory specified by
+save.dir is used.
 
 ## Examples
 
