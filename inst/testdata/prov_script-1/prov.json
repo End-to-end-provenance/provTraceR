@@ -1,0 +1,189 @@
+{
+	"prefix": {
+		"prov": "http://www.w3.org/ns/prov#",
+		"rdt": "https://github.com/End-to-end-provenance/ExtendedProvJson/blob/master/JSON-format.md"
+	},
+
+	"agent" : {
+		"rdt:a1": {
+			"rdt:tool.name": "rdtLite",
+			"rdt:tool.version": "1.2.1",
+			"rdt:json.version": "2.3",
+			"rdt:args.names": [
+				"overwrite",
+				"details",
+				"snapshot.size",
+				"save.debug"
+			],
+			"rdt:args.values": [
+				"TRUE",
+				"FALSE",
+				"0",
+				"FALSE"
+			],
+			"rdt:args.types": [
+				"logical",
+				"logical",
+				"numeric",
+				"logical"
+			]
+		}
+	},
+
+	"activity" : {
+		"rdt:p1": {
+			"rdt:name": "script-1.R",
+			"rdt:type": "Operation",
+			"rdt:elapsedTime": "0.44",
+			"rdt:scriptNum": "NA",
+			"rdt:startLine": "NA",
+			"rdt:startCol": "NA",
+			"rdt:endLine": "NA",
+			"rdt:endCol": "NA"
+		}
+	},
+
+	"entity" : {
+		"rdt:d1": {
+			"rdt:name": "file-1.csv",
+			"rdt:value": "data/1-file-1.csv",
+			"rdt:valType": "{\"container\":\"vector\", \"dimension\":[1], \"type\":[\"character\"]}",
+			"rdt:type": "File",
+			"rdt:scope": "undefined",
+			"rdt:fromEnv": false,
+			"rdt:hash": "76320f2b3c4416b81358fbded96a4b5e",
+			"rdt:timestamp": "2020-06-23T10.09.12EDT",
+			"rdt:location": "C:/TraceR/file-1.csv"
+		},
+		"rdt:d2": {
+			"rdt:name": "file-3.csv",
+			"rdt:value": "data/2-file-3.csv",
+			"rdt:valType": "{\"container\":\"vector\", \"dimension\":[1], \"type\":[\"character\"]}",
+			"rdt:type": "File",
+			"rdt:scope": "undefined",
+			"rdt:fromEnv": false,
+			"rdt:hash": "824854feb009b5944b9f43cd0121f230",
+			"rdt:timestamp": "2020-06-23T10.09.12EDT",
+			"rdt:location": "C:/TraceR/file-3.csv"
+		},
+		"rdt:d3": {
+			"rdt:name": "file-4.csv",
+			"rdt:value": "data/3-file-4.csv",
+			"rdt:valType": "{\"container\":\"vector\", \"dimension\":[1], \"type\":[\"character\"]}",
+			"rdt:type": "File",
+			"rdt:scope": "undefined",
+			"rdt:fromEnv": false,
+			"rdt:hash": "f6e8d1ea70b349b117ef9e4c8db1ceb3",
+			"rdt:timestamp": "2020-06-23T10.09.12EDT",
+			"rdt:location": "C:/TraceR/file-4.csv"
+		},
+
+		"rdt:environment": {
+			"rdt:name": "environment",
+			"rdt:architecture": "x86_64",
+			"rdt:operatingSystem": "mingw32",
+			"rdt:language": "R",
+			"rdt:langVersion": "R version 4.0.0 (2020-04-24)",
+			"rdt:script": "C:/TraceR/script-1.R",
+			"rdt:scriptTimeStamp": "2020-06-23T10.08.45EDT",
+			"rdt:totalElapsedTime": "0.44",
+			"rdt:sourcedScripts": "",
+			"rdt:sourcedScriptTimeStamps": "",
+			"rdt:workingDirectory": "C:/TraceR",
+			"rdt:provDirectory": "C:/Prov/prov_script-1",
+			"rdt:provTimestamp": "2020-06-23T10.09.11EDT",
+			"rdt:hashAlgorithm": "md5"
+		},
+
+		"rdt:l1": {
+			"name": "base",
+			"version": "4.0.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l2": {
+			"name": "datasets",
+			"version": "4.0.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l3": {
+			"name": "ggplot2",
+			"version": "3.3.1",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l4": {
+			"name": "graphics",
+			"version": "4.0.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l5": {
+			"name": "grDevices",
+			"version": "4.0.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l6": {
+			"name": "methods",
+			"version": "4.0.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l7": {
+			"name": "provTraceR",
+			"version": "1.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l8": {
+			"name": "stats",
+			"version": "4.0.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		},
+		"rdt:l9": {
+			"name": "utils",
+			"version": "4.0.0",
+			"prov:type": {
+				"$": "prov:Collection",
+				"type": "xsd:QName"
+			}
+		}
+	},
+
+	"wasGeneratedBy" : {
+		"rdt:pd1": {
+			"prov:activity": "rdt:p1",
+			"prov:entity": "rdt:d2"
+		},
+		"rdt:pd2": {
+			"prov:activity": "rdt:p1",
+			"prov:entity": "rdt:d3"
+		}
+	},
+
+	"used" : {
+		"rdt:dp1": {
+			"prov:entity": "rdt:d1",
+			"prov:activity": "rdt:p1"
+		}
+	}
+}

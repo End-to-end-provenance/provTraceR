@@ -1,0 +1,41 @@
+SCRIPTS:
+
+1 : C:/TraceR/script-1.R 
+        Executed: 2020-06-23T10.09.11EDT 
+
+2 : C:/TraceR/script-2.R 
+        Executed: 2020-06-23T10.09.13EDT 
+
+
+INPUTS:
+
+1 : C:/TraceR/file-1.csv 
+        Saved: data/1-file-1.csv 
+        Hash:  76320f2b3c4416b81358fbded96a4b5e 
+
+2 : C:/TraceR/file-2.csv 
+        Saved: data/1-file-2.csv 
+        Hash:  43334d302f6cb39ea0a0ea2b98ac6049 
+
+
+OUTPUTS:
+
+1 : C:/TraceR/file-3.csv 
+        Saved: data/2-file-3.csv 
+        Hash:  824854feb009b5944b9f43cd0121f230 
+
+1 : C:/TraceR/file-4.csv 
+        Saved: data/3-file-4.csv 
+        Hash:  f6e8d1ea70b349b117ef9e4c8db1ceb3 
+
+2 : C:/TraceR/file-5.csv 
+        Saved: data/3-file-5.csv 
+        Hash:  5496ec0a6171e4ae1b29a4518b68de71 
+
+
+EXCHANGES:
+
+1 > 2 : C:/TraceR/file-3.csv 
+        Saved: data/1-file-2.csv 
+        Hash:  43334d302f6cb39ea0a0ea2b98ac6049 
+

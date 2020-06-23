@@ -1,0 +1,19 @@
+SCRIPTS:
+
+1 : C:/TraceR/script-1.R 
+2 : C:/TraceR/script-2.R 
+
+INPUTS:
+
+1 : C:/TraceR/file-1.csv 
+2 : C:/TraceR/file-2.csv 
+
+OUTPUTS:
+
+1 : C:/TraceR/file-3.csv 
+1 : C:/TraceR/file-4.csv 
+2 : C:/TraceR/file-5.csv 
+
+EXCHANGES:
+
+1 > 2 : C:/TraceR/file-3.csv 
