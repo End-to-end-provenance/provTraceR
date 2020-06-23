@@ -79,9 +79,8 @@
 #' @return no return value
 #' @export
 #' @examples 
-#' \dontrun{
-#' testdata <- system.file("testscripts", "test.R", package = "provTraceR")
-#' prov.trace(testdata)}
+#' prov.dir <- system.file("testdata", package="provTraceR")
+#' prov.trace(c("script-1.R", "script-2.R"), prov.dir=prov.dir)
 #' @rdname lineage
 
 prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
@@ -111,10 +110,6 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
 #' @param ... other parameters passed to the provenance collector
 #' @return no return value
 #' @export
-#' @examples 
-#' \dontrun{
-#' testdata <- system.file("testscripts", "test.R", package = "provTraceR")
-#' prov.trace.run(testdata)}
 #' @rdname lineage
 
 prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,

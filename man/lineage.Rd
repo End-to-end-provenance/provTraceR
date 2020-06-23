@@ -56,10 +56,6 @@ prov.trace.run runs the specified script(s), collects provenance, and uses
 the provenance to trace file lineage.
 }
 \examples{
-\dontrun{
-testdata <- system.file("testscripts", "test.R", package = "provTraceR")
-prov.trace(testdata)}
-\dontrun{
-testdata <- system.file("testscripts", "test.R", package = "provTraceR")
-prov.trace.run(testdata)}
+prov.dir <- system.file("testdata", package="provTraceR")
+prov.trace(c("script-1.R", "script-2.R"), prov.dir=prov.dir)
 }
