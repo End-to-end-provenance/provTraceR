@@ -137,6 +137,11 @@ get.scripts.from.file <- function(scripts) {
 		stop()
 	}
 	script.names <- readLines(scripts, warn=FALSE)
+	# empty file
+	if (length(script.names) == 0) {
+	  cat("Text file is empty\n")
+	  stop()
+	}
 	ss <- vector()
 	# skip blank lines
 	for (i in 1:length(script.names)) {
@@ -176,7 +181,7 @@ run.scripts <- function(scripts, prov.tool, details, ...) {
 			cat(scripts[i], "not found\n")
 			stop()
 		}
-		tryCatch (prov.run(scripts[i], details=details, ...), error = function(x) {print (x)})
+		tryCatch(prov.run(scripts[i], details=details, ...), error = function(x) {print (x)})
 	}
 }
 
@@ -442,7 +447,7 @@ display.input.files <- function(infiles, outfiles, file.details) {
 						# output file from preceding script
 						if (outfiles$script[j] < infiles$script[i]) {
 							infiles$match[i] <- TRUE
-						# output file previously written by current script
+						# output file from current script with same data node
 						} else if (outfiles$script[j] == infiles$script[i]) {
 							if (infiles$id[i] == outfiles$id[j]) {
 								infiles$match[i] <- TRUE
@@ -454,7 +459,7 @@ display.input.files <- function(infiles, outfiles, file.details) {
 		}
 		index <- which(infiles$match == FALSE)
 		count <- length(index)
-		# display input files without matching output file
+		# display input files without a matching output file
 		if (count > 0) {
 			ii <- infiles[index, ]
 			# order by script number and location
