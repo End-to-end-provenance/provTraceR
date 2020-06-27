@@ -1,3 +1,4 @@
 /provTraceR.Rcheck/
 *.tar.gz
 .RHistory
+.RData

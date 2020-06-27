@@ -25,7 +25,8 @@
 # collects provenance, and uses the provenance to trace file lineage.
 
 # The scripts parameter may contain a single script name, a vector
-# of script names, or a text file (with extension .txt) of script names.
+# of script names, or a text file of script names. The text file must have
+# extension .txt and one script name per line. Blank lines are ignored.
 
 # For prov.trace only: If more than one script is specified, the order
 # of the scripts must match the order of execution as recorded in the 
@@ -37,14 +38,15 @@
 
 # It is assumed that provenance for each script is stored under a single
 # provenance directory set by the prov.dir option.  If not, the provenance
-# directory may be specified with the prov.dir parameter. Timestamped 
+# directory must be specified with the prov.dir parameter. Timestamped 
 # provenance and provenance in scattered locations are not currently supported.
 
-# Files are matched by hash value. INPUTS lists files that are read by a script
-# but not written by the same script or an earlier script. OUTPUTS lists files 
-# written by a script. EXCHANGES lists files with the same hash value that were
-# written by one script and read by a later script; if the location changed, 
-# both locations are listed.
+# Files are matched by hash value. INPUTS lists files that are required 
+# to run the script or scripts. These include files read by a script and not
+# written by an earlier script or previously written by the same script.
+# OUTPUTS lists files written by the script or scripts. EXCHANGES lists 
+# files with the same hash value that were written by one script and read 
+# by a later script; if the location changed, both locations are listed.
 
 # In the output, a dash (-) indicates that the file no longer exists at the
 # original location, a plus (+) indicates that the file exists but the hash
@@ -138,8 +140,9 @@ get.scripts.from.file <- function(scripts) {
 	ss <- vector()
 	# skip blank lines
 	for (i in 1:length(script.names)) {
-		if (script.names[i] != "") {
-			ss <- append(ss, script.names[i])
+		sname <- trimws(script.names[i])
+		if (sname != "") {
+			ss <- append(ss, sname)
 		}
 	}
 	return(ss)
@@ -435,14 +438,23 @@ display.input.files <- function(infiles, outfiles, file.details) {
 		for (i in 1:nrow(infiles)) {
 			if (nrow(outfiles) > 0) {
 				for (j in 1:nrow(outfiles)) {
-					if (outfiles$script[j] <= infiles$script[i] && infiles$hash[i] == outfiles$hash[j]) {
-						infiles$match[i] <- TRUE
+					if (infiles$hash[i] == outfiles$hash[j]) {
+						# output file from preceding script
+						if (outfiles$script[j] < infiles$script[i]) {
+							infiles$match[i] <- TRUE
+						# output file previously written by current script
+						} else if (outfiles$script[j] == infiles$script[i]) {
+							if (infiles$id[i] == outfiles$id[j]) {
+								infiles$match[i] <- TRUE
+							}
+						}
 					}
 				}
 			}
 		}
 		index <- which(infiles$match == FALSE)
 		count <- length(index)
+		# display input files without matching output file
 		if (count > 0) {
 			ii <- infiles[index, ]
 			# order by script number and location

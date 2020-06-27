@@ -5,7 +5,7 @@ SCRIPTS:
 
 INPUTS:
 
-1 : C:/TraceR/file-1.csv 
+1 + C:/TraceR/file-1.csv 
 2 : C:/TraceR/file-2.csv 
 
 OUTPUTS:
