@@ -47,11 +47,12 @@ provenance directory set by the <i>prov.dir</i> option.  If not, the provenance
 directory may be specified with the <i>prov.dir</i> parameter. Timestamped 
 provenance and provenance in scattered locations are not currently supported.
 
-Files are matched by hash value. INPUTS lists files that are read by a script
-but not written by the same script or an earlier script. OUTPUTS lists files 
-written by a script. EXCHANGES lists files with the same hash value that were
-written by one script and read by a later script; if the location changed, 
-both locations are listed.
+Files are matched by hash value. INPUTS lists files that are required 
+to run the script or scripts. These include files read by a script and not
+written by an earlier script or previously written by the same script.
+OUTPUTS lists files written by the script or scripts. EXCHANGES lists 
+files with the same hash value that were written by one script and read 
+by a later script; if the location changed, both locations are listed.
 
 In the output, a dash (-) indicates that the file no longer exists at the
 original location, a plus (+) indicates that the file exists but the hash
