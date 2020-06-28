@@ -1,23 +1,23 @@
 SCRIPTS:
 
-1 : C:/TraceR/script-3.R 
+1 = C:/TraceR/script-3.R 
         Executed: 2020-06-27T09.11.28EDT 
 
 
 INPUTS:
 
-1 : C:/TraceR/file-6.csv 
+1 = C:/TraceR/file-6.csv 
         Saved: data/1-file-6.csv 
         Hash:  c8df452eea442273227406d1bce68b3a 
 
 
 OUTPUTS:
 
-1 : C:/TraceR/file-6.csv 
+1 = C:/TraceR/file-6.csv 
         Saved: data/3-file-6.csv 
         Hash:  c8df452eea442273227406d1bce68b3a 
 
-1 : C:/TraceR/file-7.csv 
+1 = C:/TraceR/file-7.csv 
         Saved: data/6-file-7.csv 
         Hash:  9cd65ba7067c39c8e5e50b42f275f8bc 
 
