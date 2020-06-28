@@ -12,6 +12,9 @@ r_packages:
   - provParseR
   - rdtLite
 
+r_github_packages:
+  - End-to-end-provenance/rdt
+
 notifications:
   slack: endtoendprovenance:DNYqXZWhV1c3eRhkjGYyjCEv
 
