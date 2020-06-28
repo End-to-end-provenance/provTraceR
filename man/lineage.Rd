@@ -10,7 +10,8 @@ prov.trace(
   prov.dir = NULL,
   file.details = FALSE,
   save = FALSE,
-  save.dir = NULL
+  save.dir = NULL,
+  check = TRUE
 )
 
 prov.trace.run(
@@ -19,6 +20,7 @@ prov.trace.run(
   file.details = FALSE,
   save = FALSE,
   save.dir = NULL,
+  check = TRUE,
   prov.tool = "rdtLite",
   details = FALSE,
   ...
@@ -37,6 +39,8 @@ script names (file extension = .txt)}
 \item{save.dir}{where to save the results file. If NULL, use the R session 
 temporary directory. If a period (.), use the current working directory.
 Otherwise use save.dir.}
+
+\item{check}{whether to check against the user's file system}
 
 \item{prov.tool}{provenance collection tool (rdtLite or rdt)}
 

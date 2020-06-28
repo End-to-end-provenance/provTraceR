@@ -21,13 +21,13 @@ This package includes two functions:
 1. To use existing provenance to trace file lineage:
 
 ```{r}
-prov.trace(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, save.dir=NULL)
+prov.trace(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, save.dir=NULL, check=TRUE)
 ```
 
 2. To run one or more scripts, collect provenance, and trace file lineage:
 
 ```{r}
-prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, save.dir=NULL, prov.tool="rdtLite", details=FALSE, ...)
+prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, save.dir=NULL, check=TRUE, prov.tool="rdtLite", details=FALSE, ...)
 ```
 
 The <i>scripts</i> parameter may contain a single script name, a vector
@@ -54,11 +54,6 @@ OUTPUTS lists files written by the script or scripts. EXCHANGES lists
 files with the same hash value that were written by one script and read 
 by a later script; if the location changed, both locations are listed.
 
-In the output, a dash (-) indicates that the file no longer exists at the
-original location, a plus (+) indicates that the file exists but the hash
-value has changed, and a colon (:) indicates that the file exists and the
-hash value is unchanged.
-
 If <i>file.details</i> = TRUE, additional details are displayed, including script
 execution timestamps, saved file names, and file hash values.
 
@@ -69,6 +64,12 @@ The <i>save.dir</i> parameter determines where the results file is saved.
 If NULL (the default), the R session temporary directory is used. If a period (.),
 the current working directory is used. Otherwise the directory specified by
 save.dir is used.
+
+If <i>check</i> = TRUE, each file recorded in the provenance is checked against the
+user's file system.  A dash (-) in the output indicates that the file no longer
+exists, a plus (+) indicates that the file exists but the hash value has changed,
+and a colon (:) indicates that the file exists and the hash value is unchanged.
+If <i>check</i> = FALSE, no comparison is made and the output contains an equal sign (=).
 
 ## Examples
 
