@@ -93,6 +93,7 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
 	if (length(scripts) == 1 && tools::file_ext(scripts) == "txt") {
 		scripts <- get.scripts.from.file(scripts)
 	}
+	check.scripts(scripts)
 	prov <- get.provenance(scripts, prov.dir)
 	verify.order.of.execution(prov, scripts)
 	trace.files(prov, scripts, file.details, save, save.dir, check)
@@ -123,6 +124,7 @@ prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALS
 	if (length(scripts) == 1 && tools::file_ext(scripts) == "txt") {
 		scripts <- get.scripts.from.file(scripts)
 	}
+	check.scripts(scripts)
 	run.scripts(scripts, prov.tool, details, ...)
 	prov <- get.provenance(scripts, prov.dir)
 	trace.files(prov, scripts, file.details, save, save.dir, check)
@@ -156,6 +158,26 @@ get.scripts.from.file <- function(scripts) {
 	return(ss)
 }
 
+#' check.scripts stops execution if scripts is empty.
+#' @param scripts a vector of script names
+#' @return no return value
+#' @noRd
+
+check.scripts <- function(scripts) {
+	snum <- length(scripts)
+	if (snum == 0) {
+		cat("Vector of script names is empty\n")
+		stop()
+	}
+	for (i in 1:snum) {
+		sname <- scripts[i]
+		if (nchar(sname) == 0) {
+			cat("Script name is empty\n")
+			stop()
+		}
+	}
+}
+
 #' run.scripts run scripts in the order specified and collects provenance.
 #' @param scripts a vector of script names
 #' @param prov.tool provenance collection tool (rdtLite or rdt)
@@ -175,16 +197,17 @@ run.scripts <- function(scripts, prov.tool, details, ...) {
 		stop()
 	}
 	# run each script in turn
-	for (i in 1:length(scripts)) {
-		if (scripts[i] == "console") {
+	snum <- length(scripts)
+	for (i in 1:snum) {
+		sname <- scripts[i]
+		if (sname == "console") {
 			cat("Use prov.trace for console sessions\n")
 			stop()
-		}
-		if (!file.exists(scripts[i])) {
-			cat(scripts[i], "not found\n")
+		} else if (!file.exists(sname)) {
+			cat(sname, "not found\n")
 			stop()
 		}
-		tryCatch(prov.run(scripts[i], details=details, ...), error = function(x) {print (x)})
+		tryCatch(prov.run(sname, details=details, ...), error = function(x) {print (x)})
 	}
 }
 
@@ -209,10 +232,14 @@ get.provenance <- function(scripts, prov.dir) {
 	}
 	# get provenance for each script
 	for (i in 1:snum) {
-		if (scripts[i] == "console") {
+		sname <- scripts[i]
+		if (sname == "console") {
 			file.name <- "console"
+		} else if (toupper(substr(sname, nchar(sname)-1, nchar(sname))) != ".R") {
+			cat(sname, "must end in .R or .r\n")
+			stop()
 		} else {
-			file.name <- substr(scripts[i], 1, nchar(scripts[i])-2)
+			file.name <- substr(sname, 1, nchar(sname)-2)
  		}
  		prov.file <- paste(prov.dir, "/prov_", file.name, "/prov.json", sep="")
  		if (!file.exists(prov.file)) {
