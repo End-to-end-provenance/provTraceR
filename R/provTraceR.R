@@ -426,7 +426,7 @@ display.scripts <- function(prov, scripts, file.details, check) {
 	cat("SCRIPTS:\n\n")
 	snum <- length(scripts)
 	for (i in 1:snum) {
-		ee <- ee <- provParseR::get.environment(prov[[i]])
+		ee <- provParseR::get.environment(prov[[i]])
 		script.name <- ee[ee$label=="script", "value"]
 		prov.timestamp <- ee[ee$label=="provTimestamp", "value"]
 		if (script.name == "") {
