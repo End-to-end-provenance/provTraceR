@@ -503,9 +503,15 @@ display.input.files <- function(infiles, outfiles, file.details, check) {
 				}
 			}
 		}
+		# exclude package .rds files
+		for (i in 1:nrow(infiles)) {
+			if (tools::file_ext(infiles$name[i]) == "rds") {
+				infiles$match[i] <- TRUE
+			}
+		}
+		# display input files without a match
 		index <- which(infiles$match == FALSE)
 		count <- length(index)
-		# display input files without a matching output file
 		if (count > 0) {
 			ii <- infiles[index, ]
 			# order by script number and location
