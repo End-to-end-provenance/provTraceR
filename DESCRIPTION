@@ -1,7 +1,7 @@
 Package: provTraceR
 Title: Uses Provenance to Trace File Lineage for One or more R Scripts
 Version: 1.0
-Date: 2020-07-02
+Date: 2020-07-03
 Authors@R: c( person("Barbara", "Lerner", role = "cre",
                       email = "blerner@mtholyoke.edu"),
               person("Emery", "Boose", role = "aut",
