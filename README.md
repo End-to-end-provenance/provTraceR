@@ -69,7 +69,7 @@ If <i>check</i> = TRUE, each file recorded in the provenance is checked against 
 user's file system.  A dash (-) in the output indicates that the file no longer
 exists, a plus (+) indicates that the file exists but the hash value has changed,
 and a colon (:) indicates that the file exists and the hash value is unchanged.
-If <i>check</i> = FALSE, no comparison is made and the output contains an equal sign (=).
+If <i>check</i> = FALSE, no comparison is made.
 
 ## Examples
 

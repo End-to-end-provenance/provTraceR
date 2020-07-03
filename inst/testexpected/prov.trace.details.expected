@@ -1,41 +1,54 @@
 SCRIPTS:
 
-1 = C:/TraceR/script-1.R 
-        Executed: 2020-06-23T10.09.11EDT 
+1   C:/TraceR/script-1.R 
+        Timestamp: 2020-06-23T10.08.45EDT 
+        Hash:      fa8c38133c2c86954435e11f7deefc2c 
+        Saved:     C:/Prov/prov_script-1/scripts/script-1.R 
+        Executed:  2020-07-03T18.39.36EDT 
 
-2 = C:/TraceR/script-2.R 
-        Executed: 2020-06-23T10.09.13EDT 
+2   C:/TraceR/script-2.R 
+        Timestamp: 2020-06-23T10.07.55EDT 
+        Hash:      b548b4ee97164303bbb35d741016ec7e 
+        Saved:     C:/Prov/prov_script-2/scripts/script-2.R 
+        Executed:  2020-07-03T18.39.38EDT 
 
 
 INPUTS:
 
-1 = C:/TraceR/file-1.csv 
-        Saved: data/1-file-1.csv 
-        Hash:  76320f2b3c4416b81358fbded96a4b5e 
+1   C:/TraceR/file-1.csv 
+        Timestamp: 2020-06-26T15.27.37 EDT 
+        Hash:      5496ec0a6171e4ae1b29a4518b68de71 
+        Saved:     C:/Prov/prov_script-1/data/1-file-1.csv 
 
-2 = C:/TraceR/file-2.csv 
-        Saved: data/1-file-2.csv 
-        Hash:  43334d302f6cb39ea0a0ea2b98ac6049 
+2   C:/TraceR/file-2.csv 
+        Timestamp: 2020-06-23T09.58.19 EDT 
+        Hash:      43334d302f6cb39ea0a0ea2b98ac6049 
+        Saved:     C:/Prov/prov_script-2/data/1-file-2.csv 
 
 
 OUTPUTS:
 
-1 = C:/TraceR/file-3.csv 
-        Saved: data/2-file-3.csv 
-        Hash:  824854feb009b5944b9f43cd0121f230 
+1   C:/TraceR/file-3.csv 
+        Timestamp: 2020-07-03T18.39.37 EDT 
+        Hash:      9cd65ba7067c39c8e5e50b42f275f8bc 
+        Saved:     C:/Prov/prov_script-1/data/2-file-3.csv 
 
-1 = C:/TraceR/file-4.csv 
-        Saved: data/3-file-4.csv 
-        Hash:  f6e8d1ea70b349b117ef9e4c8db1ceb3 
+1   C:/TraceR/file-4.csv 
+        Timestamp: 2020-07-03T18.39.37 EDT 
+        Hash:      614ae064405b28d46850fb384019a49a 
+        Saved:     C:/Prov/prov_script-1/data/3-file-4.csv 
 
-2 = C:/TraceR/file-5.csv 
-        Saved: data/3-file-5.csv 
-        Hash:  5496ec0a6171e4ae1b29a4518b68de71 
+2   C:/TraceR/file-5.csv 
+        Timestamp: 2020-07-03T18.39.40 EDT 
+        Hash:      d52fd10e833ccec645c180517250c8a1 
+        Saved:     C:/Prov/prov_script-2/data/3-file-5.csv 
 
 
 EXCHANGES:
 
-1 > 2 = C:/TraceR/file-3.csv 
-        Saved: data/1-file-2.csv 
-        Hash:  43334d302f6cb39ea0a0ea2b98ac6049 
+1 > 2   C:/TraceR/file-3.csv 
+        Timestamp: 2020-07-03T18.39.37 EDT 
+        Hash:      9cd65ba7067c39c8e5e50b42f275f8bc 
+        Saved out: C:/Prov/prov_script-1/data/3-file-5.csv 
+        Saved in:  C:/Prov/prov_script-2/data/2-file-3.csv 
 
