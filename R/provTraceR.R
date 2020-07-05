@@ -393,17 +393,27 @@ check.file.system <- function(location, hash, algorithm, check) {
 get.prov.dir <- function(script.prov) {
 	ee <- provParseR::get.environment(script.prov)
 	prov.dir <- ee[ee$label=="provDirectory", "value"]
-	prov.dir <- normalizePath(prov.dir, winslash="/", mustWork=FALSE)
+	if (Sys.info()["sysname"] == "Windows") {
+		prov.dir <- normalizePath(prov.dir, winslash="/", mustWork=FALSE)
+	}
 	return(prov.dir)
 }
 
-#' format.timestamp returns a timestamp in a standard format.
-#' @param ts input timestamp formatted as yyyy-mm-dd hh:mm:ss
-#' @return timestamp formatted as yyyy-mm-ddThh.mm.ss.TZ
+#' get.file.timestamp return a file timestamp formatted as 
+#' yyyy-mm-ddThh.mm.ss TZ if check is TRUE; otherwise it returns an
+#' empty string.
+#' @param file the path and name of a file
+#' @param check whether to check against the user's file system
+#' @return the file timestamp
 #' @noRd
 
-format.timestamp <- function(ts) {
-	return(strftime(ts, format="%Y-%m-%dT%H.%M.%S", usetz=TRUE))
+get.file.timestamp <- function(file, check) {
+	if (check == TRUE) {
+		ts <- file.mtime(file)
+		return(strftime(ts, format="%Y-%m-%dT%H.%M.%S", usetz=TRUE))
+	} else {
+		return("")
+	}
 }
 
 #' get.infiles returns a data frame of all input files.
@@ -476,9 +486,13 @@ display.scripts <- function(prov, scripts, file.details, check) {
 	for (i in 1:snum) {
 		ee <- provParseR::get.environment(prov[[i]])
 		script.name <- ee[ee$label=="script", "value"]
-		hash <- ee[ee$label=="scriptHash", "value"]
-		if (length(hash) ==0) {
-			hash <- "NA"
+		if (check == TRUE) {
+			hash <- ee[ee$label=="scriptHash", "value"]
+			if (length(hash) == 0) {
+				hash <- "NA"
+			}
+		} else {
+			hash <- ""
 		}
 		algorithm <- ee[ee$label=="hashAlgorithm", "value"]
 		if (script.name == "Console.R" || hash == "NA") {
@@ -493,9 +507,7 @@ display.scripts <- function(prov, scripts, file.details, check) {
 			timestamp <- ee[ee$label=="scriptTimeStamp", "value"]
 			executed <- ee[ee$label=="provTimestamp", "value"]
 			cat("        Timestamp:", timestamp, "\n")
-			cat("        Hash:     \n")
-			# restore when rdtLite updated
-			# cat("        Hash:     ", hash, "\n")
+			cat("        Hash:     ", hash, "\n")
 			cat("        Saved:    ", saved.file, "\n")
 			cat("        Executed: ", executed, "\n\n")
 		}
@@ -556,7 +568,7 @@ display.input.files <- function(prov, infiles, outfiles, file.details, check) {
 					if (file.details == TRUE) {
 						prov.dir <- get.prov.dir(prov[[ii$script[i]]])
 						saved.file <- paste(prov.dir, "/", ii$value[i], sep="")
-						timestamp <- format.timestamp(file.mtime(saved.file))
+						timestamp <- get.file.timestamp(saved.file, check)
 						cat("        Timestamp:", timestamp, "\n")
 						cat("        Hash:     ", ii$hash[i], "\n")
 						cat("        Saved:    ", saved.file, "\n\n")
@@ -598,7 +610,7 @@ display.output.files <- function(prov, outfiles, file.details, check) {
 			if (file.details == TRUE) {
 				prov.dir <- get.prov.dir(prov[[oo$script[i]]])
 				saved.file <- paste(prov.dir, "/", oo$value[i], sep="")
-				timestamp <- format.timestamp(file.mtime(saved.file))
+				timestamp <- get.file.timestamp(saved.file, check)
 				cat("        Timestamp:", timestamp, "\n")
 				cat("        Hash:     ", oo$hash[i], "\n")
 				cat("        Saved:    ", saved.file, "\n\n")
@@ -642,7 +654,7 @@ display.exchanged.files <- function(prov, scripts, infiles, outfiles, file.detai
 							saved.file.in <- paste(prov.dir.in, "/", infiles$value[j], sep="")
 							prov.dir.out <- get.prov.dir(prov[[outfiles$script[k]]])
 							saved.file.out <- paste(prov.dir.out, "/", outfiles$value[j], sep="")
-							timestamp <- format.timestamp(file.mtime(saved.file.in))
+							timestamp <- get.file.timestamp(saved.file.in, check)
 							cat("        Timestamp:", timestamp, "\n")
 							cat("        Hash:     ", infiles$hash[j], "\n")
 							cat("        Saved out:", saved.file.out, "\n")

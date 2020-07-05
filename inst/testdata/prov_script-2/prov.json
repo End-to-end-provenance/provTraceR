@@ -34,7 +34,7 @@
 		"rdt:p1": {
 			"rdt:name": "script-2.R",
 			"rdt:type": "Operation",
-			"rdt:elapsedTime": "0.47",
+			"rdt:elapsedTime": "0.35",
 			"rdt:scriptNum": "NA",
 			"rdt:startLine": "NA",
 			"rdt:startCol": "NA",
@@ -52,7 +52,7 @@
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
 			"rdt:hash": "43334d302f6cb39ea0a0ea2b98ac6049",
-			"rdt:timestamp": "2020-07-03T18.39.39EDT",
+			"rdt:timestamp": "2020-07-05T16.47.53EDT",
 			"rdt:location": "C:/TraceR/file-2.csv"
 		},
 		"rdt:d2": {
@@ -63,7 +63,7 @@
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
 			"rdt:hash": "9cd65ba7067c39c8e5e50b42f275f8bc",
-			"rdt:timestamp": "2020-07-03T18.39.40EDT",
+			"rdt:timestamp": "2020-07-05T16.47.54EDT",
 			"rdt:location": "C:/TraceR/file-3.csv"
 		},
 		"rdt:d3": {
@@ -74,7 +74,7 @@
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
 			"rdt:hash": "d52fd10e833ccec645c180517250c8a1",
-			"rdt:timestamp": "2020-07-03T18.39.40EDT",
+			"rdt:timestamp": "2020-07-05T16.47.54EDT",
 			"rdt:location": "C:/TraceR/file-5.csv"
 		},
 
@@ -87,13 +87,13 @@
 			"rdt:script": "C:/TraceR/script-2.R",
 			"rdt:scriptTimeStamp": "2020-06-23T10.07.55EDT",
 			"rdt:scriptHash": "b548b4ee97164303bbb35d741016ec7e",
-			"rdt:totalElapsedTime": "0.47",
+			"rdt:totalElapsedTime": "0.35",
 			"rdt:sourcedScripts": "",
 			"rdt:sourcedScriptTimeStamps": "",
 			"rdt:sourcedScriptHashes": "",
 			"rdt:workingDirectory": "c:/TraceR",
 			"rdt:provDirectory": "C:\\Prov/prov_script-2",
-			"rdt:provTimestamp": "2020-07-03T18.39.38EDT",
+			"rdt:provTimestamp": "2020-07-05T16.47.53EDT",
 			"rdt:hashAlgorithm": "md5"
 		},
 
@@ -146,16 +146,16 @@
 			}
 		},
 		"rdt:l7": {
-			"name": "stats",
-			"version": "4.0.0",
+			"name": "rdtLite",
+			"version": "1.2.1",
 			"prov:type": {
 				"$": "prov:Collection",
 				"type": "xsd:QName"
 			}
 		},
 		"rdt:l8": {
-			"name": "testthat",
-			"version": "2.3.2",
+			"name": "stats",
+			"version": "4.0.0",
 			"prov:type": {
 				"$": "prov:Collection",
 				"type": "xsd:QName"
