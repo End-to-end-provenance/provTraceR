@@ -493,7 +493,9 @@ display.scripts <- function(prov, scripts, file.details, check) {
 			timestamp <- ee[ee$label=="scriptTimeStamp", "value"]
 			executed <- ee[ee$label=="provTimestamp", "value"]
 			cat("        Timestamp:", timestamp, "\n")
-			cat("        Hash:     ", hash, "\n")
+			cat("        Hash:     \n")
+			# restore when rdtLite updated
+			# cat("        Hash:     ", hash, "\n")
 			cat("        Saved:    ", saved.file, "\n")
 			cat("        Executed: ", executed, "\n\n")
 		}

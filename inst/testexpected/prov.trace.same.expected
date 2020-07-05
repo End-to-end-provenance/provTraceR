@@ -1,30 +1,13 @@
 SCRIPTS:
 
 1   C:/TraceR/script-3.R 
-        Timestamp: 2020-06-27T10.32.52EDT 
-        Hash:      6e61861f9dff45a01f0a900d65893437 
-        Saved:     C:/Prov/prov_script-3/scripts/script-3.R 
-        Executed:  2020-07-03T18.32.55EDT 
-
 
 INPUTS:
 
 1   C:/TraceR/file-6.csv 
-        Timestamp: 2020-06-27T13.59.46 EDT 
-        Hash:      c8df452eea442273227406d1bce68b3a 
-        Saved:     C:/Prov/prov_script-3/data/1-file-6.csv 
-
 
 OUTPUTS:
 
 1   C:/TraceR/file-6.csv 
-        Timestamp: 2020-07-03T18.32.57 EDT 
-        Hash:      c8df452eea442273227406d1bce68b3a 
-        Saved:     C:/Prov/prov_script-3/data/2-file-6.csv 
-
 1   C:/TraceR/file-7.csv 
-        Timestamp: 2020-07-03T18.32.57 EDT 
-        Hash:      9cd65ba7067c39c8e5e50b42f275f8bc 
-        Saved:     C:/Prov/prov_script-3/data/3-file-7.csv 
-
 
