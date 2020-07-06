@@ -35,6 +35,7 @@
 
 # For prov.trace.run only: The provenance collection tool is specified by the
 # parameter prov.tool and must be "rdtLite" or "rdt". The default is "rdtLite".
+# Scripts are executed in the order listed.
 
 # It is assumed that provenance for each script is stored under a single
 # provenance directory set by the prov.dir option.  If not, the provenance
@@ -46,10 +47,10 @@
 # written by an earlier script or previously written by the same script.
 # OUTPUTS lists files written by the script or scripts. EXCHANGES lists 
 # files with the same hash value that were written by one script and read 
-# by a later script; if the location changed, both locations are listed.
+# by a later script.
 
-# If file.details = TRUE, additional details are displayed, including script
-# execution timestamps, file timestamps, file hash values, and saved file names.
+# If file.details = TRUE, additional details are displayed, including execution 
+# timestamps, file timestamps, file hash values, and saved file names.
 
 # If save = TRUE, results are displayed in the console and saved to the file
 # prov-trace.txt.
@@ -300,8 +301,7 @@ trace.files <- function(prov, scripts, file.details, save, save.dir, check) {
 	}
 }
 
-#' save.to.text.file sends output to the console and to the file prov-trace.txt
-#' on the current working directory.
+#' save.to.text.file sends output to the console and to the file prov-trace.txt.
 #' @param prov a list of provenance for each script
 #' @param scripts a vector of script names
 #' @param infiles a data frame of input files
@@ -393,27 +393,19 @@ check.file.system <- function(location, hash, algorithm, check) {
 get.prov.dir <- function(script.prov) {
 	ee <- provParseR::get.environment(script.prov)
 	prov.dir <- ee[ee$label=="provDirectory", "value"]
-	if (Sys.info()["sysname"] == "Windows") {
-		prov.dir <- normalizePath(prov.dir, winslash="/", mustWork=FALSE)
-	}
+	prov.dir <- normalizePath(prov.dir, winslash="/", mustWork=FALSE)
 	return(prov.dir)
 }
 
 #' get.file.timestamp return a file timestamp formatted as 
-#' yyyy-mm-ddThh.mm.ss TZ if check is TRUE; otherwise it returns an
-#' empty string.
+#' yyyy-mm-ddThh.mm.ss TZ.
 #' @param file the path and name of a file
-#' @param check whether to check against the user's file system
 #' @return the file timestamp
 #' @noRd
 
-get.file.timestamp <- function(file, check) {
-	if (check == TRUE) {
-		ts <- file.mtime(file)
-		return(strftime(ts, format="%Y-%m-%dT%H.%M.%S", usetz=TRUE))
-	} else {
-		return("")
-	}
+get.file.timestamp <- function(file) {
+	ts <- file.mtime(file)
+	return(strftime(ts, format="%Y-%m-%dT%H.%M.%S", usetz=TRUE))
 }
 
 #' get.infiles returns a data frame of all input files.
@@ -486,13 +478,9 @@ display.scripts <- function(prov, scripts, file.details, check) {
 	for (i in 1:snum) {
 		ee <- provParseR::get.environment(prov[[i]])
 		script.name <- ee[ee$label=="script", "value"]
-		if (check == TRUE) {
-			hash <- ee[ee$label=="scriptHash", "value"]
-			if (length(hash) == 0) {
-				hash <- "NA"
-			}
-		} else {
-			hash <- ""
+		hash <- ee[ee$label=="scriptHash", "value"]
+		if (length(hash) == 0) {
+			hash <- "NA"
 		}
 		algorithm <- ee[ee$label=="hashAlgorithm", "value"]
 		if (script.name == "Console.R" || hash == "NA") {
@@ -501,6 +489,7 @@ display.scripts <- function(prov, scripts, file.details, check) {
 			tag <- check.file.system(script.name, hash, algorithm, check)
 		}
 		cat(i, tag, script.name, "\n")
+		# file details
 		if (file.details == TRUE) {
 			prov.dir <- get.prov.dir(prov[[i]])
 			saved.file <- paste(prov.dir, "/scripts/", basename(script.name), sep="")
@@ -565,10 +554,11 @@ display.input.files <- function(prov, infiles, outfiles, file.details, check) {
 					# display location for files
 					tag <- check.file.system(ii[i, "location"], ii[i, "hash"], ii[i, "algorithm"], check)
 					cat(ii$script[i], tag, ii$location[i], "\n")
+					# file details
 					if (file.details == TRUE) {
 						prov.dir <- get.prov.dir(prov[[ii$script[i]]])
 						saved.file <- paste(prov.dir, "/", ii$value[i], sep="")
-						timestamp <- get.file.timestamp(saved.file, check)
+						timestamp <- get.file.timestamp(saved.file)
 						cat("        Timestamp:", timestamp, "\n")
 						cat("        Hash:     ", ii$hash[i], "\n")
 						cat("        Saved:    ", saved.file, "\n\n")
@@ -607,10 +597,11 @@ display.output.files <- function(prov, outfiles, file.details, check) {
 		for (i in 1:nrow(oo)) {
 			tag <- check.file.system(oo[i, "location"], oo[i, "hash"], oo[i, "algorithm"], check)
 			cat(oo$script[i], tag, oo$location[i], "\n")
+			# file details
 			if (file.details == TRUE) {
 				prov.dir <- get.prov.dir(prov[[oo$script[i]]])
 				saved.file <- paste(prov.dir, "/", oo$value[i], sep="")
-				timestamp <- get.file.timestamp(saved.file, check)
+				timestamp <- get.file.timestamp(saved.file)
 				cat("        Timestamp:", timestamp, "\n")
 				cat("        Hash:     ", oo$hash[i], "\n")
 				cat("        Saved:    ", saved.file, "\n\n")
@@ -646,15 +637,17 @@ display.exchanged.files <- function(prov, scripts, infiles, outfiles, file.detai
 						# display infile location if hash values match
 						tag <- check.file.system(infiles[j, "location"], infiles[j, "hash"], infiles[j, "algorithm"], check)
 						cat(outfiles$script[k], ">", infiles$script[j], tag, infiles$location[j], "\n")
+						# display outfile location if different
 						if (infiles$location[j] != outfiles$location[k]) {
 							cat("        ", outfiles$location[k], "\n")
 						}
+						# file details
 						if (file.details == TRUE) {
 							prov.dir.in <- get.prov.dir(prov[[infiles$script[j]]])
 							saved.file.in <- paste(prov.dir.in, "/", infiles$value[j], sep="")
 							prov.dir.out <- get.prov.dir(prov[[outfiles$script[k]]])
 							saved.file.out <- paste(prov.dir.out, "/", outfiles$value[j], sep="")
-							timestamp <- get.file.timestamp(saved.file.in, check)
+							timestamp <- get.file.timestamp(saved.file.in)
 							cat("        Timestamp:", timestamp, "\n")
 							cat("        Hash:     ", infiles$hash[j], "\n")
 							cat("        Saved out:", saved.file.out, "\n")
