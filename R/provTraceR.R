@@ -35,6 +35,7 @@
 
 # For prov.trace.run only: The provenance collection tool is specified by the
 # parameter prov.tool and must be "rdtLite" or "rdt". The default is "rdtLite".
+# Scripts are executed in the order listed.
 
 # It is assumed that provenance for each script is stored under a single
 # provenance directory set by the prov.dir option.  If not, the provenance
@@ -46,10 +47,10 @@
 # written by an earlier script or previously written by the same script.
 # OUTPUTS lists files written by the script or scripts. EXCHANGES lists 
 # files with the same hash value that were written by one script and read 
-# by a later script; if the location changed, both locations are listed.
+# by a later script.
 
-# If file.details = TRUE, additional details are displayed, including script
-# execution timestamps, saved file names, and file hash values.
+# If file.details = TRUE, additional details are displayed, including execution 
+# timestamps, file timestamps, file hash values, and saved file names.
 
 # If save = TRUE, results are displayed in the console and saved to the file
 # prov-trace.txt.
@@ -63,7 +64,7 @@
 # user's file system.  A dash (-) in the output indicates that the file no longer
 # exists, a plus (+) indicates that the file exists but the hash value has changed,
 # and a colon (:) indicates that the file exists and the hash value is unchanged.
-# If check = FALSE, no comparison is made and the output contains an equal sign (=).
+# If check = FALSE, no comparison is made.
 
 ###############################################################################
 
@@ -93,6 +94,7 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE,
 	if (length(scripts) == 1 && tools::file_ext(scripts) == "txt") {
 		scripts <- get.scripts.from.file(scripts)
 	}
+	check.scripts(scripts)
 	prov <- get.provenance(scripts, prov.dir)
 	verify.order.of.execution(prov, scripts)
 	trace.files(prov, scripts, file.details, save, save.dir, check)
@@ -123,6 +125,7 @@ prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALS
 	if (length(scripts) == 1 && tools::file_ext(scripts) == "txt") {
 		scripts <- get.scripts.from.file(scripts)
 	}
+	check.scripts(scripts)
 	run.scripts(scripts, prov.tool, details, ...)
 	prov <- get.provenance(scripts, prov.dir)
 	trace.files(prov, scripts, file.details, save, save.dir, check)
@@ -156,6 +159,26 @@ get.scripts.from.file <- function(scripts) {
 	return(ss)
 }
 
+#' check.scripts stops execution if scripts is empty.
+#' @param scripts a vector of script names
+#' @return no return value
+#' @noRd
+
+check.scripts <- function(scripts) {
+	snum <- length(scripts)
+	if (snum == 0) {
+		cat("Vector of script names is empty\n")
+		stop()
+	}
+	for (i in 1:snum) {
+		sname <- scripts[i]
+		if (nchar(sname) == 0) {
+			cat("Script name is empty\n")
+			stop()
+		}
+	}
+}
+
 #' run.scripts run scripts in the order specified and collects provenance.
 #' @param scripts a vector of script names
 #' @param prov.tool provenance collection tool (rdtLite or rdt)
@@ -175,16 +198,17 @@ run.scripts <- function(scripts, prov.tool, details, ...) {
 		stop()
 	}
 	# run each script in turn
-	for (i in 1:length(scripts)) {
-		if (scripts[i] == "console") {
+	snum <- length(scripts)
+	for (i in 1:snum) {
+		sname <- scripts[i]
+		if (sname == "console") {
 			cat("Use prov.trace for console sessions\n")
 			stop()
-		}
-		if (!file.exists(scripts[i])) {
-			cat(scripts[i], "not found\n")
+		} else if (!file.exists(sname)) {
+			cat(sname, "not found\n")
 			stop()
 		}
-		tryCatch(prov.run(scripts[i], details=details, ...), error = function(x) {print (x)})
+		tryCatch(prov.run(sname, details=details, ...), error = function(x) {print (x)})
 	}
 }
 
@@ -209,10 +233,14 @@ get.provenance <- function(scripts, prov.dir) {
 	}
 	# get provenance for each script
 	for (i in 1:snum) {
-		if (scripts[i] == "console") {
+		sname <- scripts[i]
+		if (sname == "console") {
 			file.name <- "console"
+		} else if (toupper(substr(sname, nchar(sname)-1, nchar(sname))) != ".R") {
+			cat(sname, "must end in .R or .r\n")
+			stop()
 		} else {
-			file.name <- substr(scripts[i], 1, nchar(scripts[i])-2)
+			file.name <- substr(sname, 1, nchar(sname)-2)
  		}
  		prov.file <- paste(prov.dir, "/prov_", file.name, "/prov.json", sep="")
  		if (!file.exists(prov.file)) {
@@ -273,8 +301,7 @@ trace.files <- function(prov, scripts, file.details, save, save.dir, check) {
 	}
 }
 
-#' save.to.text.file sends output to the console and to the file prov-trace.txt
-#' on the current working directory.
+#' save.to.text.file sends output to the console and to the file prov-trace.txt.
 #' @param prov a list of provenance for each script
 #' @param scripts a vector of script names
 #' @param infiles a data frame of input files
@@ -328,34 +355,46 @@ get.save.dir <- function(save.dir) {
 
 display.output <- function(prov, scripts, infiles, outfiles, file.details, check) {
 	display.scripts(prov, scripts, file.details, check)
-	display.input.files(infiles, outfiles, file.details, check)
-	display.output.files(outfiles, file.details, check)
-	display.exchanged.files(scripts, infiles, outfiles, file.details, check)
+	display.input.files(prov, infiles, outfiles, file.details, check)
+	display.output.files(prov, outfiles, file.details, check)
+	display.exchanged.files(prov, scripts, infiles, outfiles, file.details, check)
 }
 
 #' check.file.system checks if the specified file exists in its original
-#' location and if the hash value has changed,
-#' @param file original path and file name
+#' location and if the hash value has changed.
+#' @param location original file path and name
+#' @param hash hash value
+#' @param algorithm hash algorithm
 #' @param check whether to check against the user's file system
 #' @return a coded string value
 #' @noRd
 
-check.file.system <- function(file, check) {
+check.file.system <- function(location, hash, algorithm, check) {
 	if (check == TRUE) {
-		location <- file$location
-		hash.algorithm <- file$hash.algorithm
 		if (!file.exists(location)) {
 			tag <- "-"
-		} else if (file$hash != digest::digest(file=location, algo=hash.algorithm)) {
+		} else if (hash != digest::digest(file=location, algo=algorithm)) {
 			tag <- "+"
 		} else {
 			tag <- ":"
 		}
 	} else {
-		tag <- "="
+		tag <- " "
 	}
 
 	return(tag)
+}
+
+#' get.provenance.dir returns the provenance directory for a particular script.
+#' @param script.prov provenance for a script
+#' @return the provenance directory
+#' @noRd
+
+get.prov.dir <- function(script.prov) {
+	ee <- provParseR::get.environment(script.prov)
+	prov.dir <- ee[ee$label=="provDirectory", "value"]
+	prov.dir <- normalizePath(prov.dir, winslash="/", mustWork=FALSE)
+	return(prov.dir)
 }
 
 #' get.infiles returns a data frame of all input files.
@@ -423,29 +462,39 @@ get.outfiles <- function(prov, scripts) {
 #' @noRd
 
 display.scripts <- function(prov, scripts, file.details, check) {
-	cat("SCRIPTS:\n\n")
+	cat("\nSCRIPTS:\n\n")
 	snum <- length(scripts)
 	for (i in 1:snum) {
-		ee <- ee <- provParseR::get.environment(prov[[i]])
+		ee <- provParseR::get.environment(prov[[i]])
 		script.name <- ee[ee$label=="script", "value"]
-		prov.timestamp <- ee[ee$label=="provTimestamp", "value"]
-		if (script.name == "") {
-			script.name <- "Console session"
+		hash <- ee[ee$label=="scriptHash", "value"]
+		if (length(hash) == 0) {
+			hash <- "NA"
 		}
-		if (check == TRUE) {
-			tag <- ":"
+		algorithm <- ee[ee$label=="hashAlgorithm", "value"]
+		if (script.name == "Console.R" || hash == "NA") {
+			tag <- " "
 		} else {
-			tag <- "="
+			tag <- check.file.system(script.name, hash, algorithm, check)
 		}
 		cat(i, tag, script.name, "\n")
+		# file details
 		if (file.details == TRUE) {
-			cat("        Executed:", prov.timestamp, "\n\n")
+			prov.dir <- get.prov.dir(prov[[i]])
+			saved.file <- paste(prov.dir, "/scripts/", basename(script.name), sep="")
+			timestamp <- ee[ee$label=="scriptTimeStamp", "value"]
+			executed <- ee[ee$label=="provTimestamp", "value"]
+			cat("        Timestamp:", timestamp, "\n")
+			cat("        Hash:     ", hash, "/", algorithm, "\n")
+			cat("        Saved:    ", saved.file, "\n")
+			cat("        Executed: ", executed, "\n\n")
 		}
 	}
 	cat("\n")
 }
 
 #' display.input.files displays information for input files in the console.
+#' @param prov a list of provenance for each script
 #' @param infiles a data frame of input files
 #' @param outfiles a data frame of output files
 #' @param file.details whether to display file details
@@ -453,7 +502,7 @@ display.scripts <- function(prov, scripts, file.details, check) {
 #' @return no return value
 #' @noRd
 
-display.input.files <- function(infiles, outfiles, file.details, check) {
+display.input.files <- function(prov, infiles, outfiles, file.details, check) {
 	cat("INPUTS:\n\n")
 	count <- 0	
 	if (nrow(infiles) > 0) {
@@ -476,9 +525,15 @@ display.input.files <- function(infiles, outfiles, file.details, check) {
 				}
 			}
 		}
+		# exclude package .rds files
+		for (i in 1:nrow(infiles)) {
+			if (tools::file_ext(infiles$name[i]) == "rds") {
+				infiles$match[i] <- TRUE
+			}
+		}
+		# display input files without a match
 		index <- which(infiles$match == FALSE)
 		count <- length(index)
-		# display input files without a matching output file
 		if (count > 0) {
 			ii <- infiles[index, ]
 			# order by script number and location
@@ -486,15 +541,19 @@ display.input.files <- function(infiles, outfiles, file.details, check) {
 			for (i in 1:nrow(ii)) {
 				if (ii$location[i] != "") {
 					# display location for files
-					tag <- check.file.system(ii[i, ], check)
+					tag <- check.file.system(ii[i, "location"], ii[i, "hash"], ii[i, "algorithm"], check)
 					cat(ii$script[i], tag, ii$location[i], "\n")
+					# file details
 					if (file.details == TRUE) {
-						cat("        Saved:", ii$value[i], "\n")
-						cat("        Hash: ", ii$hash[i], "\n\n")
+						prov.dir <- get.prov.dir(prov[[ii$script[i]]])
+						saved.file <- paste(prov.dir, "/", ii$value[i], sep="")
+						cat("        Timestamp:", ii$timestamp[i], "\n")
+						cat("        Hash:     ", ii$hash[i], "/", ii$hash.algorithm[i], "\n")
+						cat("        Saved:    ", saved.file, "\n\n")
 					}
 				} else {
 					# display name for urls
-					cat(ii$script[i], ":", ii$name[i], "\n")
+					cat(ii$script[i], " ", ii$name[i], "\n")
 					if (file.details == TRUE) {
 						cat("\n")
 					}
@@ -510,24 +569,29 @@ display.input.files <- function(infiles, outfiles, file.details, check) {
 }
 
 #' display.output.files displays information for output files in the console.
+#' @param prov a list of provenance for each script
 #' @param outfiles a data frame of output files
 #' @param file.details whether to display file details
 #' @param check whether to check against the user's file system
 #' @return no return value
 #' @noRd
 
-display.output.files <- function(outfiles, file.details, check) {
+display.output.files <- function(prov, outfiles, file.details, check) {
 	cat("OUTPUTS:\n\n")
 	if (nrow(outfiles) > 0) {
 		oo <- outfiles
 		# order by script number and location
 		oo <- oo[order(oo$script, oo$location), ]
 		for (i in 1:nrow(oo)) {
-			tag <- check.file.system(oo[i, ], check)
+			tag <- check.file.system(oo[i, "location"], oo[i, "hash"], oo[i, "algorithm"], check)
 			cat(oo$script[i], tag, oo$location[i], "\n")
+			# file details
 			if (file.details == TRUE) {
-				cat("        Saved:", oo$value[i], "\n")
-				cat("        Hash: ", oo$hash[i], "\n\n")
+				prov.dir <- get.prov.dir(prov[[oo$script[i]]])
+				saved.file <- paste(prov.dir, "/", oo$value[i], sep="")
+				cat("        Timestamp:", oo$timestamp[i], "\n")
+				cat("        Hash:     ", oo$hash[i], "/", oo$hash.algorithm[i], "\n")
+				cat("        Saved:    ", saved.file, "\n\n")
 			}
 		}
 	} else {
@@ -538,6 +602,7 @@ display.output.files <- function(outfiles, file.details, check) {
 
 #' display.exchanged.files displays information for files written by one script and read 
 #' by a subsequent script in the console.
+#' @param prov a list of provenance for each script
 #' @param scripts a vector of script names
 #' @param infiles a data frame of input files
 #' @param outfiles a data frame of output files
@@ -546,7 +611,7 @@ display.output.files <- function(outfiles, file.details, check) {
 #' @return no return value
 #' @noRd
 
-display.exchanged.files <- function(scripts, infiles, outfiles, file.details, check) {
+display.exchanged.files <- function(prov, scripts, infiles, outfiles, file.details, check) {
 	snum <- length(scripts)
 	# not relevant for a single script
 	if (snum > 1) {
@@ -557,20 +622,22 @@ display.exchanged.files <- function(scripts, infiles, outfiles, file.details, ch
 				for (k in 1:nrow(outfiles)) {
 					if (infiles$script[j] == i && outfiles$script[k] < i && infiles$hash[j] == outfiles$hash[k]) {
 						# display infile location if hash values match
-						tag <- check.file.system(infiles[j, ], check)
+						tag <- check.file.system(infiles[j, "location"], infiles[j, "hash"], infiles[j, "algorithm"], check)
 						cat(outfiles$script[k], ">", infiles$script[j], tag, infiles$location[j], "\n")
-						if (file.details == TRUE) {
-							cat("        Saved:", infiles$value[i], "\n")
-							cat("        Hash: ", infiles$hash[i], "\n\n")
-						}
+						# display outfile location if different
 						if (infiles$location[j] != outfiles$location[k]) {
-							# display outfile location if different from infile location
-							tag <- check.file.system(outfiles[k, ], check)
-							cat("      ", tag, " ", outfiles$location[k], "\n")
-							if (file.details == TRUE) {
-								cat("        Saved:", outfiles$value[i], "\n")
-								cat("        Hash: ", outfiles$hash[i], "\n\n")
-							}
+							cat("        ", outfiles$location[k], "\n")
+						}
+						# file details
+						if (file.details == TRUE) {
+							prov.dir.in <- get.prov.dir(prov[[infiles$script[j]]])
+							saved.file.in <- paste(prov.dir.in, "/", infiles$value[j], sep="")
+							prov.dir.out <- get.prov.dir(prov[[outfiles$script[k]]])
+							saved.file.out <- paste(prov.dir.out, "/", outfiles$value[j], sep="")
+							cat("        Timestamp:", infiles$timestamp[j], "\n")
+							cat("        Hash:     ", infiles$hash[j], "/", infiles$hash.algorithm[j], "\n")
+							cat("        Saved out:", saved.file.out, "\n")
+							cat("        Saved in: ", saved.file.in, "\n\n")
 						}
 						count <- count + 1
 					}

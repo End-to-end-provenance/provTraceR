@@ -34,7 +34,7 @@
 		"rdt:p1": {
 			"rdt:name": "script-1.R",
 			"rdt:type": "Operation",
-			"rdt:elapsedTime": "0.44",
+			"rdt:elapsedTime": "0.35",
 			"rdt:scriptNum": "NA",
 			"rdt:startLine": "NA",
 			"rdt:startCol": "NA",
@@ -51,8 +51,8 @@
 			"rdt:type": "File",
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
-			"rdt:hash": "76320f2b3c4416b81358fbded96a4b5e",
-			"rdt:timestamp": "2020-06-23T10.09.12EDT",
+			"rdt:hash": "5496ec0a6171e4ae1b29a4518b68de71",
+			"rdt:timestamp": "2020-07-05T16.47.52EDT",
 			"rdt:location": "C:/TraceR/file-1.csv"
 		},
 		"rdt:d2": {
@@ -62,8 +62,8 @@
 			"rdt:type": "File",
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
-			"rdt:hash": "824854feb009b5944b9f43cd0121f230",
-			"rdt:timestamp": "2020-06-23T10.09.12EDT",
+			"rdt:hash": "9cd65ba7067c39c8e5e50b42f275f8bc",
+			"rdt:timestamp": "2020-07-05T16.47.52EDT",
 			"rdt:location": "C:/TraceR/file-3.csv"
 		},
 		"rdt:d3": {
@@ -73,25 +73,27 @@
 			"rdt:type": "File",
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
-			"rdt:hash": "f6e8d1ea70b349b117ef9e4c8db1ceb3",
-			"rdt:timestamp": "2020-06-23T10.09.12EDT",
+			"rdt:hash": "614ae064405b28d46850fb384019a49a",
+			"rdt:timestamp": "2020-07-05T16.47.52EDT",
 			"rdt:location": "C:/TraceR/file-4.csv"
 		},
 
 		"rdt:environment": {
 			"rdt:name": "environment",
-			"rdt:architecture": "x86_64",
-			"rdt:operatingSystem": "mingw32",
+			"rdt:architecture": "x86_64-w64-mingw32/x64 (64-bit)",
+			"rdt:operatingSystem": "Windows 10 x64 (build 17763)",
 			"rdt:language": "R",
 			"rdt:langVersion": "R version 4.0.0 (2020-04-24)",
 			"rdt:script": "C:/TraceR/script-1.R",
 			"rdt:scriptTimeStamp": "2020-06-23T10.08.45EDT",
-			"rdt:totalElapsedTime": "0.44",
+			"rdt:scriptHash": "fa8c38133c2c86954435e11f7deefc2c",
+			"rdt:totalElapsedTime": "0.35",
 			"rdt:sourcedScripts": "",
 			"rdt:sourcedScriptTimeStamps": "",
-			"rdt:workingDirectory": "C:/TraceR",
-			"rdt:provDirectory": "C:/Prov/prov_script-1",
-			"rdt:provTimestamp": "2020-06-23T10.09.11EDT",
+			"rdt:sourcedScriptHashes": "",
+			"rdt:workingDirectory": "c:/TraceR",
+			"rdt:provDirectory": "C:\\Prov/prov_script-1",
+			"rdt:provTimestamp": "2020-07-05T16.47.51EDT",
 			"rdt:hashAlgorithm": "md5"
 		},
 
@@ -144,8 +146,8 @@
 			}
 		},
 		"rdt:l7": {
-			"name": "provTraceR",
-			"version": "1.0",
+			"name": "rdtLite",
+			"version": "1.2.1",
 			"prov:type": {
 				"$": "prov:Collection",
 				"type": "xsd:QName"
