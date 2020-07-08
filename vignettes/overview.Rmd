@@ -1,25 +1,24 @@
+---
+title: "Overview of provTraceR"
+date: "8 July 2020"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
 ## provTraceR
 
-The provTraceR package displays information about files used or created 
-by an R script or a series of R scripts. The package uses provenance collected by
+The provTraceR package displays information about files used or created by an 
+R script or a series of R scripts. The package uses provenance collected by
 [rdtLite](https://CRAN.R-project.org/package=rdtLite) and stored in 
 [prov-json format](https://github.com/End-to-end-provenance/ExtendedProvJson/blob/master/JSON-format.md).
 Output from provTraceR can be used to help manage files and to identify the 
 input files needed to reproduce an analysis.
 
-## Installation
-To install from GitHub:
-
-```
-devtools::install_github("End-to-end-provenance/provTraceR")
-```
-Once installed, load the package:
-
-```
-library("provTraceR")
-```
-
 ## Usage
+
 This package includes two functions:
 
 1. To use existing provenance to trace file lineage:

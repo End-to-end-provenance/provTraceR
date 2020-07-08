@@ -397,17 +397,6 @@ get.prov.dir <- function(script.prov) {
 	return(prov.dir)
 }
 
-#' get.file.timestamp return a file timestamp formatted as 
-#' yyyy-mm-ddThh.mm.ss TZ.
-#' @param file the path and name of a file
-#' @return the file timestamp
-#' @noRd
-
-get.file.timestamp <- function(file) {
-	ts <- file.mtime(file)
-	return(strftime(ts, format="%Y-%m-%dT%H.%M.%S", usetz=TRUE))
-}
-
 #' get.infiles returns a data frame of all input files.
 #' @param prov a list of provenance for each script
 #' @param scripts a vector of script names
@@ -473,7 +462,7 @@ get.outfiles <- function(prov, scripts) {
 #' @noRd
 
 display.scripts <- function(prov, scripts, file.details, check) {
-	cat("SCRIPTS:\n\n")
+	cat("\nSCRIPTS:\n\n")
 	snum <- length(scripts)
 	for (i in 1:snum) {
 		ee <- provParseR::get.environment(prov[[i]])
@@ -496,7 +485,7 @@ display.scripts <- function(prov, scripts, file.details, check) {
 			timestamp <- ee[ee$label=="scriptTimeStamp", "value"]
 			executed <- ee[ee$label=="provTimestamp", "value"]
 			cat("        Timestamp:", timestamp, "\n")
-			cat("        Hash:     ", hash, "\n")
+			cat("        Hash:     ", hash, "/", algorithm, "\n")
 			cat("        Saved:    ", saved.file, "\n")
 			cat("        Executed: ", executed, "\n\n")
 		}
@@ -558,9 +547,8 @@ display.input.files <- function(prov, infiles, outfiles, file.details, check) {
 					if (file.details == TRUE) {
 						prov.dir <- get.prov.dir(prov[[ii$script[i]]])
 						saved.file <- paste(prov.dir, "/", ii$value[i], sep="")
-						timestamp <- get.file.timestamp(saved.file)
-						cat("        Timestamp:", timestamp, "\n")
-						cat("        Hash:     ", ii$hash[i], "\n")
+						cat("        Timestamp:", ii$timestamp[i], "\n")
+						cat("        Hash:     ", ii$hash[i], "/", ii$hash.algorithm[i], "\n")
 						cat("        Saved:    ", saved.file, "\n\n")
 					}
 				} else {
@@ -601,9 +589,8 @@ display.output.files <- function(prov, outfiles, file.details, check) {
 			if (file.details == TRUE) {
 				prov.dir <- get.prov.dir(prov[[oo$script[i]]])
 				saved.file <- paste(prov.dir, "/", oo$value[i], sep="")
-				timestamp <- get.file.timestamp(saved.file)
-				cat("        Timestamp:", timestamp, "\n")
-				cat("        Hash:     ", oo$hash[i], "\n")
+				cat("        Timestamp:", oo$timestamp[i], "\n")
+				cat("        Hash:     ", oo$hash[i], "/", oo$hash.algorithm[i], "\n")
 				cat("        Saved:    ", saved.file, "\n\n")
 			}
 		}
@@ -647,9 +634,8 @@ display.exchanged.files <- function(prov, scripts, infiles, outfiles, file.detai
 							saved.file.in <- paste(prov.dir.in, "/", infiles$value[j], sep="")
 							prov.dir.out <- get.prov.dir(prov[[outfiles$script[k]]])
 							saved.file.out <- paste(prov.dir.out, "/", outfiles$value[j], sep="")
-							timestamp <- get.file.timestamp(saved.file.in)
-							cat("        Timestamp:", timestamp, "\n")
-							cat("        Hash:     ", infiles$hash[j], "\n")
+							cat("        Timestamp:", infiles$timestamp[j], "\n")
+							cat("        Hash:     ", infiles$hash[j], "/", infiles$hash.algorithm[j], "\n")
 							cat("        Saved out:", saved.file.out, "\n")
 							cat("        Saved in: ", saved.file.in, "\n\n")
 						}
