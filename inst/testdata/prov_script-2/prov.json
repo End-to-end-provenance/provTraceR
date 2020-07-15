@@ -7,7 +7,7 @@
 	"agent" : {
 		"rdt:a1": {
 			"rdt:tool.name": "rdtLite",
-			"rdt:tool.version": "1.2.1",
+			"rdt:tool.version": "1.3",
 			"rdt:json.version": "2.3",
 			"rdt:args.names": [
 				"overwrite",
@@ -34,7 +34,7 @@
 		"rdt:p1": {
 			"rdt:name": "script-2.R",
 			"rdt:type": "Operation",
-			"rdt:elapsedTime": "0.35",
+			"rdt:elapsedTime": "0.43",
 			"rdt:scriptNum": "NA",
 			"rdt:startLine": "NA",
 			"rdt:startCol": "NA",
@@ -52,7 +52,7 @@
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
 			"rdt:hash": "43334d302f6cb39ea0a0ea2b98ac6049",
-			"rdt:timestamp": "2020-07-05T16.47.53EDT",
+			"rdt:timestamp": "2020-06-23T09.58.19EDT",
 			"rdt:location": "C:/TraceR/file-2.csv"
 		},
 		"rdt:d2": {
@@ -63,7 +63,7 @@
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
 			"rdt:hash": "9cd65ba7067c39c8e5e50b42f275f8bc",
-			"rdt:timestamp": "2020-07-05T16.47.54EDT",
+			"rdt:timestamp": "2020-07-15T10.50.03EDT",
 			"rdt:location": "C:/TraceR/file-3.csv"
 		},
 		"rdt:d3": {
@@ -74,7 +74,7 @@
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
 			"rdt:hash": "d52fd10e833ccec645c180517250c8a1",
-			"rdt:timestamp": "2020-07-05T16.47.54EDT",
+			"rdt:timestamp": "2020-07-15T10.50.05EDT",
 			"rdt:location": "C:/TraceR/file-5.csv"
 		},
 
@@ -87,13 +87,13 @@
 			"rdt:script": "C:/TraceR/script-2.R",
 			"rdt:scriptTimeStamp": "2020-06-23T10.07.55EDT",
 			"rdt:scriptHash": "b548b4ee97164303bbb35d741016ec7e",
-			"rdt:totalElapsedTime": "0.35",
+			"rdt:totalElapsedTime": "0.43",
 			"rdt:sourcedScripts": "",
 			"rdt:sourcedScriptTimeStamps": "",
 			"rdt:sourcedScriptHashes": "",
 			"rdt:workingDirectory": "c:/TraceR",
-			"rdt:provDirectory": "C:\\Prov/prov_script-2",
-			"rdt:provTimestamp": "2020-07-05T16.47.53EDT",
+			"rdt:provDirectory": "C:/Prov/prov_script-2",
+			"rdt:provTimestamp": "2020-07-15T10.50.03EDT",
 			"rdt:hashAlgorithm": "md5"
 		},
 
@@ -146,14 +146,6 @@
 			}
 		},
 		"rdt:l7": {
-			"name": "rdtLite",
-			"version": "1.2.1",
-			"prov:type": {
-				"$": "prov:Collection",
-				"type": "xsd:QName"
-			}
-		},
-		"rdt:l8": {
 			"name": "stats",
 			"version": "4.0.0",
 			"prov:type": {
@@ -161,7 +153,7 @@
 				"type": "xsd:QName"
 			}
 		},
-		"rdt:l9": {
+		"rdt:l8": {
 			"name": "utils",
 			"version": "4.0.0",
 			"prov:type": {
