@@ -1,8 +1,10 @@
 ## Resubmission
 This is a resubmission.
 
-An additional repository was added to the DESCRIPTION file for
-the suggested rdt package.
+The DESCRIPTION file was updated to include an additional repository for 
+the suggested package rdt.
+
+The .Rbuildignore file was updated so the vignette index is included.
 
 ## Test environments
 * local Windows 10, R 4.0.0
