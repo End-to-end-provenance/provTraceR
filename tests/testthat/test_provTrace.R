@@ -12,9 +12,9 @@ expect_known_output(prov.trace(c("script-1.R", "script-2.R"), prov.dir=prov.dir,
 test.expected <- system.file("testexpected", "prov.trace.details.expected", package="provTraceR", mustWork=TRUE)
 expect_known_output(prov.trace("scripts-1-2.txt", prov.dir=prov.dir, file.details=TRUE, check=FALSE), test.expected, update=FALSE)
 
-# test prov.trace.run with same file
+# test prov.trace with same file
 test.expected <- system.file("testexpected", "prov.trace.same.expected", package="provTraceR", mustWork=TRUE)
-expect_known_output(prov.trace.run("script-3.R", prov.dir=prov.dir, check=FALSE), test.expected, update=FALSE)
+expect_known_output(prov.trace("script-3.R", prov.dir=prov.dir, check=FALSE), test.expected, update=FALSE)
 
 # test prov.trace with scripts in wrong order
 expect_error(prov.trace(c("script-2.R", "script-1.R"), prov.dir=prov.dir))
