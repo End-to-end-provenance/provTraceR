@@ -1,3 +1,9 @@
+## Resubmission
+This is a resubmission.
+
+An additional repository was added to the DESCRIPTION file for
+the suggested rdt package.
+
 ## Test environments
 * local Windows 10, R 4.0.0
 * Travis CI, release & devel
