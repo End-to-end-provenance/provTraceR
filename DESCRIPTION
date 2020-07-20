@@ -1,12 +1,12 @@
 Package: provTraceR
 Title: Uses Provenance to Trace File Lineage for One or more R Scripts
 Version: 1.0
-Date: 2020-07-15
-Authors@R: c( person("Barbara", "Lerner", role = "cre",
-                      email = "blerner@mtholyoke.edu"),
-              person("Emery", "Boose", role = "aut",
-                      email = "boose@fas.harvard.edu")
-		    )
+Date: 2020-07-20
+Authors@R: c( person("Emery", "Boose", role = "cre",
+                      email = "boose@fas.harvard.edu"),
+              person("Barbara", "Lerner", role = "aut",
+                      email = "blerner@mtholyoke.edu")
+        )
 Copyright: President and Fellows of Harvard College, Trustees of Mount Holyoke College
 Description: Uses provenance collected by 'rdtLite' package or comparable tool
     to display information about input files, output files, and exchanged files
@@ -16,7 +16,7 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    provParseR (>= 0.2)
+    provParseR (>= 0.3)
 Suggests:
     digest,
     knitr,

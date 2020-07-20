@@ -6,3 +6,4 @@ build.xml
 .project
 .gitignore
 .*\.tar\.gz
+cran-comments.md
