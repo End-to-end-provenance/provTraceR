@@ -139,14 +139,12 @@ prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, save=FALS
 
 get.scripts.from.file <- function(scripts) {
 	if (!file.exists(scripts)) {
-		cat(scripts, "not found\n")
-		stop()
+		stop(scripts, "not found")
 	}
 	script.names <- readLines(scripts, warn=FALSE)
 	# empty file
 	if (length(script.names) == 0) {
-	  cat("Text file is empty\n")
-	  stop()
+	  stop("Text file is empty")
 	}
 	ss <- vector()
 	# skip blank lines
@@ -167,14 +165,12 @@ get.scripts.from.file <- function(scripts) {
 check.scripts <- function(scripts) {
 	snum <- length(scripts)
 	if (snum == 0) {
-		cat("Vector of script names is empty\n")
-		stop()
+		stop("Vector of script names is empty")
 	}
 	for (i in 1:snum) {
 		sname <- scripts[i]
 		if (nchar(sname) == 0) {
-			cat("Script name is empty\n")
-			stop()
+			stop("Script name is empty")
 		}
 	}
 }
@@ -188,14 +184,12 @@ check.scripts <- function(scripts) {
 check.prov.tool <- function(prov.tool) {
 	# check tool
 	if (prov.tool != "rdtLite" && prov.tool != "rdt") {
-		cat("Provenance collector must be rdtLite or rdt\n")
-		stop()
+		stop("Provenance collector must be rdtLite or rdt")
 	}
 	# check installation
 	installed <- utils::installed.packages()
 	if (!(prov.tool %in% installed)) {
-		cat(prov.tool, "is not installed")
-		stop()
+		stop(prov.tool, "is not installed")
 	}
 }
 
@@ -221,11 +215,9 @@ run.scripts <- function(scripts, prov.tool, details, ...) {
 	for (i in 1:snum) {
 		sname <- scripts[i]
 		if (sname == "console") {
-			cat("Use prov.trace for console sessions\n")
-			stop()
+			stop("Use prov.trace for console sessions")
 		} else if (!file.exists(sname)) {
-			cat(sname, "not found\n")
-			stop()
+			stop(sname, "not found")
 		}
 		tryCatch(prov.run(sname, details=details, ...), error = function(x) {print (x)})
 	}
@@ -247,8 +239,7 @@ get.provenance <- function(scripts, prov.dir) {
 		prov.dir <- normalizePath(prov.dir, winslash="/", mustWork=FALSE)
 	}
 	if (!dir.exists(prov.dir)) {
-		cat(prov.dir, "not found\n")
-		stop()
+		stop(prov.dir, "not found")
 	}
 	# get provenance for each script
 	for (i in 1:snum) {
@@ -256,15 +247,13 @@ get.provenance <- function(scripts, prov.dir) {
 		if (sname == "console") {
 			file.name <- "console"
 		} else if (toupper(substr(sname, nchar(sname)-1, nchar(sname))) != ".R") {
-			cat(sname, "must end in .R or .r\n")
-			stop()
+			stop(sname, "must end in .R or .r")
 		} else {
 			file.name <- substr(sname, 1, nchar(sname)-2)
  		}
  		prov.file <- paste(prov.dir, "/prov_", file.name, "/prov.json", sep="")
  		if (!file.exists(prov.file)) {
- 			cat(prov.file, "not found\n")
- 			stop()
+ 			stop(prov.file, "not found")
  		}
 		prov[[i]] <- provParseR::prov.parse(prov.file)
 	}
@@ -289,8 +278,7 @@ verify.order.of.execution <- function(prov, scripts) {
 		}
 		for (i in 1:(snum-1)) {
 			if (ts[i] > ts[i+1]) {
-				cat("Scripts were not run in this order\n")
-				stop()
+				stop("Scripts were not run in this order")
 			}
 		}
 	}
@@ -355,8 +343,7 @@ get.save.dir <- function(save.dir) {
 	} else {
 		sdir <- normalizePath(save.dir, winslash="/", mustWork=FALSE)
 		if (!dir.exists(sdir)) {
-			cat(sdir, "not found\n")
-			stop()
+			stop(sdir, "not found")
 		}
 	}
 	return(sdir)
