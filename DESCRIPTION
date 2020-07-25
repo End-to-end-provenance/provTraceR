@@ -5,14 +5,15 @@ Date: 2020-07-25
 Authors@R: c( person("Emery", "Boose", role = "cre",
                       email = "boose@fas.harvard.edu"),
               person("Barbara", "Lerner", role = "aut",
-                      email = "blerner@mtholyoke.edu")
+                      email = "blerner@mtholyoke.edu"),
+              person("President and Fellows of Harvard College", role = "cph"),
+              person("Trustees of Mount Holyoke College", role = "cph")
         )
-Copyright: President and Fellows of Harvard College, Trustees of Mount Holyoke College
 Description: Uses provenance collected by 'rdtLite' package or comparable tool
     to display information about input files, output files, and exchanged files
     for a single R script or a series of R scripts.
 Depends: R (>= 3.5)
-License: GPL-3 | file LICENSE
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: 
