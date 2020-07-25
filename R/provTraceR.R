@@ -179,6 +179,26 @@ check.scripts <- function(scripts) {
 	}
 }
 
+#' check.prov.tool checks that the specfied provenance collector
+#' is rdtLite or rdt and checks that the tool is installed.
+#' @param prov.tool a provenance collection tool
+#' @return no return value
+#' @noRd
+
+check.prov.tool <- function(prov.tool) {
+	# check tool
+	if (prov.tool != "rdtLite" && prov.tool != "rdt") {
+		cat("Provenance collector must be rdtLite or rdt\n")
+		stop()
+	}
+	# check installation
+	installed <- utils::installed.packages()
+	if (!(prov.tool %in% installed)) {
+		cat(prov.tool, "is not installed")
+		stop()
+	}
+}
+
 #' run.scripts run scripts in the order specified and collects provenance.
 #' @param scripts a vector of script names
 #' @param prov.tool provenance collection tool (rdtLite or rdt)
@@ -188,14 +208,13 @@ check.scripts <- function(scripts) {
 #' @noRd
 
 run.scripts <- function(scripts, prov.tool, details, ...) {
-	# get provenance collection tool
+	# check provenance collector
+	check.prov.tool(prov.tool)
+	# select tool
 	if (prov.tool == "rdtLite") {
 		prov.run <- rdtLite::prov.run
-	} else if (prov.tool == "rdt") {
-		prov.run <- rdt::prov.run
 	} else {
-		cat("Provenance collector must be rdtLite or rdt\n")
-		stop()
+		prov.run <- rdt::prov.run
 	}
 	# run each script in turn
 	snum <- length(scripts)
