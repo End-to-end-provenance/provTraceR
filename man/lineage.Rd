@@ -9,6 +9,7 @@ prov.trace(
   scripts,
   prov.dir = NULL,
   file.details = FALSE,
+  console = TRUE,
   save = FALSE,
   save.dir = NULL,
   check = TRUE
@@ -18,6 +19,7 @@ prov.trace.run(
   scripts,
   prov.dir = NULL,
   file.details = FALSE,
+  console = TRUE,
   save = FALSE,
   save.dir = NULL,
   check = TRUE,
@@ -34,6 +36,8 @@ script names (file extension = .txt)}
 
 \item{file.details}{whether to display file details}
 
+\item{console}{whether to display results in the console}
+
 \item{save}{whether to save results to the file prov-trace.txt}
 
 \item{save.dir}{where to save the results file. If NULL, use the R session 
@@ -49,9 +53,9 @@ Otherwise use save.dir.}
 \item{...}{other parameters passed to the provenance collector}
 }
 \value{
-no return value
+string containing file lineage
 
-no return value
+string containing file lineage
 }
 \description{
 prov.trace traces file lineage from existing provenance.
