@@ -34,7 +34,7 @@
 		"rdt:p1": {
 			"rdt:name": "script-2.R",
 			"rdt:type": "Operation",
-			"rdt:elapsedTime": "0.43",
+			"rdt:elapsedTime": "0.36",
 			"rdt:scriptNum": "NA",
 			"rdt:startLine": "NA",
 			"rdt:startCol": "NA",
@@ -63,7 +63,7 @@
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
 			"rdt:hash": "9cd65ba7067c39c8e5e50b42f275f8bc",
-			"rdt:timestamp": "2020-07-15T10.50.03EDT",
+			"rdt:timestamp": "2020-07-26T10.41.52EDT",
 			"rdt:location": "C:/TraceR/file-3.csv"
 		},
 		"rdt:d3": {
@@ -74,7 +74,7 @@
 			"rdt:scope": "undefined",
 			"rdt:fromEnv": false,
 			"rdt:hash": "d52fd10e833ccec645c180517250c8a1",
-			"rdt:timestamp": "2020-07-15T10.50.05EDT",
+			"rdt:timestamp": "2020-07-26T10.41.54EDT",
 			"rdt:location": "C:/TraceR/file-5.csv"
 		},
 
@@ -87,13 +87,13 @@
 			"rdt:script": "C:/TraceR/script-2.R",
 			"rdt:scriptTimeStamp": "2020-06-23T10.07.55EDT",
 			"rdt:scriptHash": "b548b4ee97164303bbb35d741016ec7e",
-			"rdt:totalElapsedTime": "0.43",
+			"rdt:totalElapsedTime": "0.36",
 			"rdt:sourcedScripts": "",
 			"rdt:sourcedScriptTimeStamps": "",
 			"rdt:sourcedScriptHashes": "",
-			"rdt:workingDirectory": "c:/TraceR",
+			"rdt:workingDirectory": "C:/TraceR",
 			"rdt:provDirectory": "C:/Prov/prov_script-2",
-			"rdt:provTimestamp": "2020-07-15T10.50.03EDT",
+			"rdt:provTimestamp": "2020-07-26T10.41.53EDT",
 			"rdt:hashAlgorithm": "md5"
 		},
 

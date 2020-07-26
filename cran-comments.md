@@ -1,6 +1,15 @@
 ## Resubmission
 This is a resubmission.
 
+The two exported functions were updated to return results as a string.
+
+A new parameter (console) was added to direct output to the console.
+
+The two organizations that hold copyright were added to the 
+Authors@R field.
+
+The LICENSE file was removed.
+
 The DESCRIPTION file was updated to include an additional repository for 
 the suggested package rdt.
 

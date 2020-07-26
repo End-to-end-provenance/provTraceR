@@ -13,7 +13,8 @@ To install from GitHub:
 ```
 devtools::install_github("End-to-end-provenance/provTraceR")
 ```
-Once installed, load the package:
+
+To load the package after installation:
 
 ```
 library("provTraceR")
@@ -25,13 +26,13 @@ This package includes two functions:
 1. To use existing provenance to trace file lineage:
 
 ```
-prov.trace(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, save.dir=NULL, check=TRUE)
+prov.trace(scripts, prov.dir=NULL, file.details=FALSE, console=TRUE, save=FALSE, save.dir=NULL, check=TRUE)
 ```
 
 2. To run one or more scripts, collect provenance, and trace file lineage:
 
 ```
-prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, save=FALSE, save.dir=NULL, check=TRUE, prov.tool="rdtLite", details=FALSE, ...)
+prov.trace.run(scripts, prov.dir=NULL, file.details=FALSE, console=TRUE, save=FALSE, save.dir=NULL, check=TRUE, prov.tool="rdtLite", details=FALSE, ...)
 ```
 
 The <i>scripts</i> parameter may contain a single script name, a vector
@@ -63,8 +64,11 @@ If <i>file.details</i> = TRUE, additional details are displayed, including
 script execution timestamps, file timestamps, file hash values, and saved 
 file names.
 
-If <i>save</i> = TRUE, results are displayed in the console and saved to the
-file <i>prov-trace.txt</i>.
+Results of both functions are returned as a string.
+
+If <i>console</i> = TRUE (the default), results are displayed in the console.
+
+If <i>save</i> = TRUE, results are saved to the file <i>prov-trace.txt</i>.
 
 The <i>save.dir</i> parameter determines where the results file is saved. 
 If NULL (the default), the R session temporary directory is used. If a period (.),
