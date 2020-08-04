@@ -1,6 +1,10 @@
 ## Resubmission
 This is a resubmission.
 
+Messages are now sent to the console with message rather than cat.
+
+installed.packages was replaced with requireNamespace.
+
 The two exported functions were updated to return results as a string.
 
 A new parameter (console) was added to direct output to the console.
