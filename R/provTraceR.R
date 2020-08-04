@@ -101,6 +101,7 @@ prov.trace <- function(scripts, prov.dir=NULL, file.details=FALSE, console=TRUE,
 	verify.order.of.execution(prov, scripts)
 	lineage <- trace.files(prov, scripts, file.details, check)
 	if (console == TRUE) {
+		cat("\n")
 		cat(lineage)
 	}
 	if (save == TRUE) {
@@ -140,6 +141,7 @@ prov.trace.run <- function(scripts, prov.dir=NULL, file.details=FALSE, console=T
 	prov <- get.provenance(scripts, prov.dir)
 	lineage <- trace.files(prov, scripts, file.details, check)
 	if (console == TRUE) {
+		cat("\n")
 		cat(lineage)
 	}
 	if (save == TRUE) {
@@ -204,9 +206,8 @@ check.prov.tool <- function(prov.tool) {
 		stop("Provenance collector must be rdtLite or rdt")
 	}
 	# check installation
-	installed <- utils::installed.packages()
-	if (!(prov.tool %in% installed)) {
-		stop(prov.tool, "is not installed")
+	if (!requireNamespace(prov.tool, quietly=TRUE)) {
+		stop(prov.tool, " is not installed")
 	}
 }
 
@@ -334,7 +335,7 @@ save.to.text.file <- function(lineage, save.dir) {
 	sdir <- get.save.dir(save.dir)
 	trace.file <- paste(sdir, "/prov-trace.txt", sep="")
 	cat(lineage, file=trace.file)
-	cat(paste("\nSaving results in", trace.file, "\n"))
+	message(paste("\nSaving results in", trace.file, "\n"))
 }
 
 #' get.save.dir returns the directory where the results file (prov-trace.txt) 
@@ -460,7 +461,7 @@ get.outfiles <- function(prov, scripts) {
 #' @noRd
 
 list.scripts <- function(prov, scripts, file.details, check) {
-	st <- "\nSCRIPTS:\n\n"
+	st <- "SCRIPTS:\n\n"
 	snum <- length(scripts)
 	for (i in 1:snum) {
 		ee <- provParseR::get.environment(prov[[i]])
