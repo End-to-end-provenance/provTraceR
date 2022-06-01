@@ -39,17 +39,12 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install dependencies
-        run: |
-          install.packages('remotes')
-		  remotes::install_github("end-to-end-provenance/rdtLite")
-		  remotes::install_github("end-to-end-provenance/rdt")
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, package=rdt?ignore, package=rdtLite?ignore
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+		  _R_CHECK_FORCE_SUGGESTS_: false
