@@ -21,7 +21,7 @@ The .Rbuildignore file was updated so the vignette index is included.
 
 ## Test environments
 * local Windows 10, R 4.0.0
-* Travis CI, release & devel
+* GitHub Actions, release & devel
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
